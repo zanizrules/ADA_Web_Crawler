@@ -1,3 +1,5 @@
+package Assignment2;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,7 +20,7 @@ public class Spider {
 
     private static AdjList webGraph;
     private static int numSearchLevel = 0;
-    private static final int MAX_LEVEL_SEARCH = 2;
+    private static final int MAX_LEVEL_SEARCH = 5;
     private URL startUrl;
 
     public Spider(String url) throws MalformedURLException {
@@ -55,7 +57,7 @@ public class Spider {
                 List hyperlinks = htmlDetails.getHyperlinks();
                 Iterator<URL> iterator = hyperlinks.iterator();
                 int counter = 0;
-                while (iterator.hasNext() && counter <5) {
+                while (iterator.hasNext() && counter <20) {
                     counter ++; // testing purpose
                     nextLink = (URL) iterator.next();
                     // create element and search for the key word
