@@ -1,16 +1,12 @@
-package Assignment2;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 import javax.net.ssl.SSLHandshakeException;
-import org.jsoup.select.Elements;
 
 /**
  *
