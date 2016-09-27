@@ -33,42 +33,43 @@ public class Spider {
         // create list to hold vertices as they are encountered
         List<URL> visitedLinks = new ArrayList();
         //create queue to keep track of vertices not yet fully processed
-        ArrayDeque<URL> processingQueue = new ArrayDeque();
-        
-        visitedLinks.add(startUrl);// handle the starting vertex
-        processingQueue.addLast(startUrl);// handle the starting vertex
+        ArrayDeque<Page> processingQueue = new ArrayDeque();
 
-        webGraph.addVertex(startUrl);
+        Page firstPage = new Page(startUrl,numSearchLevel);
+
+        visitedLinks.add(startUrl);// handle the starting vertex
+        processingQueue.addLast(firstPage);// handle the starting vertex
+        webGraph.addVertex(firstPage);
         URL nextLink = startUrl; // USED IN THE LOOP, SUPPORTS EXCEPTIONS
        
         // repeatedly find adjacent vertices and visit them
         while (!processingQueue.isEmpty()
                 && (numSearchLevel <= MAX_LEVEL_SEARCH)) {
             //remove front element
-            URL frontLink = processingQueue.pollFirst();
-            // find all the adjacent vertices that have not been visited
-            // and enqueue them
+            Page frontLink = processingQueue.pollFirst();
+            // find all the adjacent vertices that have not been visited and enqueue them
             try {
-                MySpiderLeg htmlDetails = new MySpiderLeg(frontLink, numSearchLevel);
-                List hyperlinks = htmlDetails.getHyperlinks();
+                List hyperlinks = SpiderLegStatic.getHyperlink(frontLink.getUrl().toString());
                 Iterator<URL> iterator = hyperlinks.iterator();
                 int counter = 0;
-                while (iterator.hasNext() && counter <20) {
+                while (iterator.hasNext() && counter < 10) {
                     counter ++; // testing purpose
-                    nextLink = (URL) iterator.next();
-                    // create element and search for the key word
-                    MySpiderLeg childHtmlDetails = new MySpiderLeg(nextLink, numSearchLevel + 1);
-                   
+                    nextLink = iterator.next();
                     boolean visited = visitedLinks.contains(nextLink);
-                    if (!visited && childHtmlDetails.findKeyWord(KeyWord)) {
+//                    && findKeyWord(nextLink,KeyWord)
+                    if (!visited ) {
+                        Page child = new Page(nextLink,numSearchLevel+1);
                         visitedLinks.add(nextLink);
-                        processingQueue.addLast(nextLink);
-                        webGraph.addVertex(nextLink);
-                        webGraph.addEdge(frontLink, nextLink);
-                        System.out.println("Level of search is "+(numSearchLevel+1)+" :"+ nextLink);
+                        processingQueue.addLast(child);
+                        webGraph.addVertex(child);
+                        webGraph.addEdge(frontLink, child);
+//                        System.out.println("Level of search is "+(numSearchLevel+1)+" :"+ nextLink);
                     }
                     if (visited) {
-                        webGraph.addEdge(frontLink, nextLink);
+                        Page page = findPage(nextLink);
+                        if(page != null) {
+                            webGraph.addEdge(frontLink, page);
+                        }
                     }
                 }
             } catch (SSLHandshakeException e) {
@@ -82,11 +83,43 @@ public class Spider {
         }
     }
 
+    private Page findPage(URL url){
+            Iterator<Page> itr = webGraph.iterator();
+            while(itr.hasNext()){
+                Page page = itr.next();
+                if(page.getUrl() == url){
+                    return page;
+                }
+            }
+            return null;
+        }
+
+    public boolean findKeyWord(URL url,String keyword) throws IOException {
+
+        List meta = SpiderLegStatic.getMeta(url.toString());
+        for (Object aMeta : meta) {
+            String link = aMeta.toString();
+            if (link.toLowerCase().contains(keyword.toLowerCase())) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     public void printFromAdjList() {
         if (webGraph.getSize() <= 1) {
             System.out.println("The keyword provided was not found in the seed Webpage!");
         } else {
-            webGraph.print();
+            List<Page> list = webGraph.getOrderedList();
+            for (Page key : list) {
+                System.out.println("Vertex: " + key.getUrl());
+                List<Page> listEdge = webGraph.getEdge(key);
+                for (Page element : listEdge) {
+                    System.out.println("    Edges: " + element.getUrl());
+                }
+            }
         }
 
     }
@@ -128,7 +161,7 @@ public class Spider {
         String aut = "http://aut.ac.nz";
         String jsoup = "https://jsoup.org";
         Spider spider = new Spider(aut);
-        spider.searchInternet("Student");
+        spider.searchInternet("aut");
         spider.printFromAdjList();
         spider.createAM();
 

@@ -60,18 +60,12 @@ public class AdjList<E> {
         return this.adjacency_list.size();
     }
 
-    public void print() {
-        for (E key : orderedList) {
-            System.out.println("Vertex: " + key);
-            List<E> listEdge = this.getEdge(key);
-            for (E element : listEdge) {
-                System.out.println("    Edges: " + element);
-            }
-        }
-    }
-
     public Iterator<E> iterator() {
         return adjacency_list.keySet().iterator();
+    }
+
+    public List getOrderedList(){
+        return orderedList;
     }
 
     public Double[][] createAM() {
@@ -96,4 +90,13 @@ public class AdjList<E> {
         return ajcMatrix;
     }
 
+    public void print() {
+        for (E key : orderedList) {
+            System.out.println("Vertex: " + key);
+            List<E> listEdge = this.getEdge(key);
+            for (E element : listEdge) {
+                System.out.println("    Edges: " + element);
+            }
+        }
+    }
 }
