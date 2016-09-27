@@ -1,4 +1,7 @@
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,7 +59,6 @@ public class Spider {
                     counter ++; // testing purpose
                     nextLink = iterator.next();
                     boolean visited = visitedLinks.contains(nextLink);
-//                    && findKeyWord(nextLink,KeyWord)
                     if (!visited ) {
                         Page child = new Page(nextLink,numSearchLevel+1);
                         visitedLinks.add(nextLink);
@@ -96,13 +98,12 @@ public class Spider {
 
     public boolean findKeyWord(URL url,String keyword) throws IOException {
 
-        List meta = SpiderLegStatic.getMeta(url.toString());
-        for (Object aMeta : meta) {
+        Elements meta = SpiderLegStatic.getMeta(url.toString());
+        for (Element aMeta : meta) {
             String link = aMeta.toString();
             if (link.toLowerCase().contains(keyword.toLowerCase())) {
                 return true;
             }
-
         }
 
         return false;
@@ -164,6 +165,10 @@ public class Spider {
         spider.searchInternet("aut");
         spider.printFromAdjList();
         spider.createAM();
+
+//        System.out.println(SpiderLegStatic.getMeta(aut));
+//
+//        System.out.println(spider.findKeyWord(new URL(aut),"aut"));
 
         System.out.println();
 
