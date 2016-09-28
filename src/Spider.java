@@ -230,6 +230,7 @@ public class Spider {
 //        props.put("http.proxyPort", "3128"); // AUT specific
 //        System.setProperties(props);
 
+        //This part allows fast test without user input
         String aut = "http://aut.ac.nz";
         String jsoup = "https://jsoup.org";
         Spider spider = new Spider(aut);
