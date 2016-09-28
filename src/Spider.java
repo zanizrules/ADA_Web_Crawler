@@ -1,14 +1,10 @@
 
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
@@ -19,72 +15,93 @@ public class Spider {
 
     private static AdjList webGraph;
     private static int numSearchLevel = 0;
-    private static final int MAX_LEVEL_SEARCH = 5;
-    private URL startUrl;
+    private static final int MAX_LEVEL_SEARCH = 20; // Sets how far Deep algorithm will seach
+    private static int numOfPages = 0;
+    private static final int MAX_PAGE_PER_SEARCH = 100;//Limits the number of pages per level
+    private URL seedURL;
 
     public Spider(String url) throws MalformedURLException {
-        startUrl = new URL(url);
-        webGraph = new AdjList();
+        seedURL = new URL(url); //stores seed Url
+        webGraph = new AdjList(); // DTS
     }
 
     public void searchInternet(String KeyWord) throws IOException {
-        breadthFirstSearch(startUrl, KeyWord);
+        breadthFirstSearch(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
     }
 
-    public void breadthFirstSearch(URL startUrl, String KeyWord) throws IOException {
-        numSearchLevel = 0;
+    /**
+     * BFS - searchs the internet for a keyword storing the relevant webPages. Edges are also stored.
+     * Accepts  a startURL where it starts the search from. Accepts a keyWord which will be the condition
+     * to add websites to the graph.
+     * @param startUrl
+     * @param KeyWord
+     * @throws IOException
+     */
+    private void breadthFirstSearch(URL startUrl, String KeyWord) throws IOException {
+
+         Page firstPage = new Page(startUrl,numSearchLevel);//first vertex stored as Page object
         // create list to hold vertices as they are encountered
-        List<URL> visitedLinks = new ArrayList();
+        List<URL> visitedLinks = new LinkedList();
+        visitedLinks.add(firstPage.getUrl());// handle the starting vertex
         //create queue to keep track of vertices not yet fully processed
-        ArrayDeque<Page> processingQueue = new ArrayDeque();
-
-        Page firstPage = new Page(startUrl,numSearchLevel);
-
-        visitedLinks.add(startUrl);// handle the starting vertex
+        LinkedList<Page> processingQueue = new LinkedList();
         processingQueue.addLast(firstPage);// handle the starting vertex
-        webGraph.addVertex(firstPage);
-        URL nextLink = startUrl; // USED IN THE LOOP, SUPPORTS EXCEPTIONS
-       
-        // repeatedly find adjacent vertices and visit them
+
+        webGraph.addVertex(firstPage); // add first vertex to the graph
+        URL currentLink = firstPage.getUrl();
+
+        numSearchLevel = 0;// ensure this variable is 0
+        // repeatedly find adjacent vertices and visit them. Stops when reachs MAX_LEVEL_SEARCH.
         while (!processingQueue.isEmpty()
                 && (numSearchLevel <= MAX_LEVEL_SEARCH)) {
-            //remove front element
-            Page frontLink = processingQueue.pollFirst();
-            // find all the adjacent vertices that have not been visited and enqueue them
+
+            Page frontLink = processingQueue.poll();//remove front element
+
             try {
-                List hyperlinks = SpiderLegStatic.getHyperlink(frontLink.getUrl().toString());
-                Iterator<URL> iterator = hyperlinks.iterator();
-                int counter = 0;
-                while (iterator.hasNext() && counter < 10) {
-                    counter ++; // testing purpose
-                    nextLink = iterator.next();
-                    boolean visited = visitedLinks.contains(nextLink);
-                    if (!visited ) {
-                        Page child = new Page(nextLink,numSearchLevel+1);
-                        visitedLinks.add(nextLink);
-                        processingQueue.addLast(child);
-                        webGraph.addVertex(child);
-                        webGraph.addEdge(frontLink, child);
-//                        System.out.println("Level of search is "+(numSearchLevel+1)+" :"+ nextLink);
-                    }
-                    if (visited) {
-                        Page page = findPage(nextLink);
-                        if(page != null) {
-                            webGraph.addEdge(frontLink, page);
+                //get all hyperlinks that frontLink contains
+                List<URL> hyperlinks = SpiderLegStatic.getHyperlink(frontLink.getUrl().toString());
+                Iterator<URL> iterator = hyperlinks.iterator(); // gets iterator
+                numOfPages = 0;//ensure this variable is 0
+                while (iterator.hasNext() && numOfPages < MAX_PAGE_PER_SEARCH) {
+                    URL nextLink = iterator.next(); // gets first element
+                    currentLink = nextLink;//set current link in case of exception is thrown
+                    //checj if link has been visited. if not set as visited
+                    if (!visitedLinks.contains(nextLink)) {
+                        visitedLinks.add(nextLink);//addd to visited
+                        //seach keyword has been found
+                        if(findKeyWord(nextLink,KeyWord)) {
+                            Page child = new Page(nextLink,numSearchLevel+1); //creates Page object for new link
+                            processingQueue.addLast(child);//add new page to the queue to be processed
+                            webGraph.addVertex(child);//add new Page as a vertex
+                            webGraph.addEdge(frontLink, child);//set edge, frontLink to new Page
                         }
+                    }else{
+                        //If link has been visit try to find it in the graph. Note: only vertex which has the
+                        //keyWord is added
+                        Page page = findPage(nextLink);
+                        if(page != null){
+                            //set link, ensure there is a link betwwen visited and already processed Page
+                            webGraph.addEdge(frontLink, page);
+                         }
                     }
+                    numOfPages ++;//increase number of pages per level.
                 }
             } catch (SSLHandshakeException e) {
-                System.err.println("Exception cought for link. Access denied. " + nextLink);
+                System.err.println("Exception caught for link. Access denied. " + currentLink);
             } catch (MalformedURLException e) {
-                System.out.println("Protocol not valid for " + nextLink);
+                System.err.println("Protocol not valid for " + currentLink);
             } catch (IOException e) {
-                System.out.println("I/O Exception in " + nextLink);
+                System.err.println("I/O Exception in " + currentLink);
             }
-            numSearchLevel++;
+            numSearchLevel++;//increase level of search
         }
     }
 
+    /**
+     * Return a existentt Page from the graph
+     * @param url
+     * @return
+     */
     private Page findPage(URL url){
             Iterator<Page> itr = webGraph.iterator();
             while(itr.hasNext()){
@@ -96,19 +113,28 @@ public class Spider {
             return null;
         }
 
-    public boolean findKeyWord(URL url,String keyword) throws IOException {
-
-        Elements meta = SpiderLegStatic.getMeta(url.toString());
-        for (Element aMeta : meta) {
-            String link = aMeta.toString();
-            if (link.toLowerCase().contains(keyword.toLowerCase())) {
-                return true;
-            }
+    /**
+     * Find the keyWord in the metadata of given url
+     * @param url
+     * @param keyword
+     * @return
+     */
+    private  boolean findKeyWord(URL url,String keyword) {
+        boolean found = false;
+        try{
+            Elements meta = SpiderLegStatic.getMeta(url.toString());
+            String link  = meta.toString();
+            found =link.toLowerCase().contains(keyword.toLowerCase());
+        } catch (IOException e) {
+            System.err.println("I/O Exception in findKeyWord method. Timed Out. Unable to get metadata for: "+url);
         }
 
-        return false;
+        return found;
     }
 
+    /**
+     * Print vertex(Pages) and thier edges
+     */
     public void printFromAdjList() {
         if (webGraph.getSize() <= 1) {
             System.out.println("The keyword provided was not found in the seed Webpage!");
@@ -125,8 +151,11 @@ public class Spider {
 
     }
 
-    public void createAM() {
-        MatrixMain.printMatrix(webGraph.createAM(), true);
+    /**
+     * Create a adjancy Matrix from the graph
+     */
+    private Double[][] createAM() {
+        return webGraph.createAM();
     }
 
     public static void main(String[] args) throws IOException {
@@ -159,18 +188,18 @@ public class Spider {
 //        spider.searchInternet(Keyword);
 //        spider.printFromAdjList();
 
+//        Properties props = new Properties(System.getProperties());
+//        props.put("http.proxySet", "true"); // true if using proxy
+//        props.put("http.proxyHost", "cache.aut.ac.nz"); // AUT specific
+//        props.put("http.proxyPort", "3128"); // AUT specific
+//        System.setProperties(props);
+
         String aut = "http://aut.ac.nz";
         String jsoup = "https://jsoup.org";
         Spider spider = new Spider(aut);
         spider.searchInternet("aut");
         spider.printFromAdjList();
-        spider.createAM();
 
-//        System.out.println(SpiderLegStatic.getMeta(aut));
-//
-//        System.out.println(spider.findKeyWord(new URL(aut),"aut"));
-
-        System.out.println();
 
     }
 
