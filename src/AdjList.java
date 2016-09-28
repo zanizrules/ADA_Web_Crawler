@@ -69,7 +69,7 @@ public class AdjList<E> {
     }
 
     public Double[][] createAM() {
-        int size = this.adjacency_list.size();
+        int size = this.orderedList.size();
         Double[][] ajcMatrix = new Double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

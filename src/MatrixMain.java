@@ -5,7 +5,39 @@
  */
 public class MatrixMain {
 
-    public Double[][] pageRank(Double[][] aM, double df) {
+    private static Double[][] pageRankMatrix(Double[][] aM, double df) {
+        int size = aM.length;
+        Double[][] pageRankMatrix = aM;
+        for (int i = 0; i < size; i++) {
+            int outgoing = 0;
+            for (int j = 0; j < size; j++) {
+                if (pageRankMatrix[i][j] == 1) {
+                    outgoing++;
+                }
+            }
+            for (int k = 0; k < size; k++) {
+                if (pageRankMatrix[i][k] == 1) {
+                    pageRankMatrix[i][k] = (double) ((1 - (df)) / size) + (df / outgoing);
+                } else {
+                    pageRankMatrix[i][k] = (double) (1 - (df)) / size;
+                }
+            }
+        }
+        return pageRankMatrix;
+    }
+
+    private static Double[][] transpose(Double[][] aM) {
+        int size = aM.length;
+        Double[][] transposedMatrix = new Double[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                transposedMatrix[j][i] = aM[i][j];
+            }
+        }
+        return transposedMatrix;
+    }
+
+    public static Double[][] pageRank(Double[][] aM, double df) {
         Double[][] pageRankMatrix = pageRankMatrix(aM, df);
         Double[][] transposedMatrix = transpose(pageRankMatrix);
         Double[][] vector = new Double[pageRankMatrix.length][1];
@@ -13,7 +45,6 @@ public class MatrixMain {
             vector[i][0] = (double) 1 / pageRankMatrix.length;
         }
         boolean changing = true;
-//        int counter =0;
         while (changing) {
             Double[][] prevVector = vector;
             vector = matrixMultiply(transposedMatrix, vector);
@@ -22,16 +53,14 @@ public class MatrixMain {
                 if (vector[i][0] > (prevVector[i][0] + 0.01)
                         || vector[i][0] < (prevVector[i][0] - 0.01)) {
                     changing = true;
-//                    counter++;
                      break;
                 }
             }
         }
-//        System.out.println(counter);
         return vector;
     }
 
-    public Double[][] powerInteration(Double[][] aM) {
+    public static Double[][] powerInteration(Double[][] aM) {
         Double[][] B = matrixAddtion(aM, IdentityMatrix(aM));
         Double[][] vector = new Double[aM.length][1];
         for (int i = 0; i < vector.length; i++) {
@@ -58,38 +87,6 @@ public class MatrixMain {
         return vector;
     }
 
-    public static Double[][] pageRankMatrix(Double[][] aM, double df) {
-        int size = aM.length;
-        Double[][] pageRankMatrix = aM;
-        for (int i = 0; i < size; i++) {
-            int outgoing = 0;
-            for (int j = 0; j < size; j++) {
-                if (pageRankMatrix[i][j] == 1) {
-                    outgoing++;
-                }
-            }
-            for (int k = 0; k < size; k++) {
-                if (pageRankMatrix[i][k] == 1) {
-                    pageRankMatrix[i][k] = (double) ((1 - (df)) / size) + (df / outgoing);
-                } else {
-                    pageRankMatrix[i][k] = (double) (1 - (df)) / size;
-                }
-            }
-        }
-        return pageRankMatrix;
-    }
-    
-    public static Double[][] transpose(Double[][] aM) {
-        int size = aM.length;
-        Double[][] transposedMatrix = new Double[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                transposedMatrix[j][i] = aM[i][j];
-            }
-        }
-        return transposedMatrix;
-    }
-    
     public static double norm(Double[][] vector) {
         double norm = 0;
         for (int i = 0; i < vector.length; i++) {

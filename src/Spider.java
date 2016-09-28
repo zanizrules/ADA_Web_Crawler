@@ -15,7 +15,7 @@ public class Spider {
 
     private static AdjList webGraph;
     private static int numSearchLevel = 0;
-    private static final int MAX_LEVEL_SEARCH = 20; // Sets how far Deep algorithm will seach
+    private static final int MAX_LEVEL_SEARCH = 10; // Sets how far Deep algorithm will seach
     private static int numOfPages = 0;
     private static final int MAX_PAGE_PER_SEARCH = 100;//Limits the number of pages per level
     private URL seedURL;
@@ -26,7 +26,7 @@ public class Spider {
     }
 
     public void searchInternet(String KeyWord) throws IOException {
-        breadthFirstSearch(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
+        webCrawler(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
     }
 
     /**
@@ -37,7 +37,7 @@ public class Spider {
      * @param KeyWord
      * @throws IOException
      */
-    private void breadthFirstSearch(URL startUrl, String KeyWord) throws IOException {
+    private void webCrawler(URL startUrl, String KeyWord) throws IOException {
 
          Page firstPage = new Page(startUrl,numSearchLevel);//first vertex stored as Page object
         // create list to hold vertices as they are encountered
@@ -126,36 +126,72 @@ public class Spider {
             String link  = meta.toString();
             found =link.toLowerCase().contains(keyword.toLowerCase());
         } catch (IOException e) {
-            System.err.println("I/O Exception in findKeyWord method. Timed Out. Unable to get metadata for: "+url);
+            System.err.println("I/O Exception in findKeyWord method. Client connection timed Out. Unable to get metadata for: "+url);
         }
 
         return found;
     }
 
     /**
-     * Print vertex(Pages) and thier edges
+     * Create a adjancy Matrix from the graph. Calculates the Pagerank of each page.
+     * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
-    public void printFromAdjList() {
-        if (webGraph.getSize() <= 1) {
-            System.out.println("The keyword provided was not found in the seed Webpage!");
-        } else {
-            List<Page> list = webGraph.getOrderedList();
-            for (Page key : list) {
-                System.out.println("Vertex: " + key.getUrl());
-                List<Page> listEdge = webGraph.getEdge(key);
-                for (Page element : listEdge) {
-                    System.out.println("    Edges: " + element.getUrl());
+    public Queue<Page> orderPagesByRank() {
+        Double[][] pageRank = MatrixMain.pageRank(webGraph.createAM(),0.15);
+        List<Page> list = webGraph.getOrderedList();
+        Comparator<Page> comparator = new Comparator<Page>() {
+            @Override
+            public int compare(Page o1, Page o2) {
+                if(o1.getPageRank() > o2.getPageRank()){
+                    return 1;
+                }else if (o1.getPageRank() < o2.getPageRank()){
+                    return -1;
+                }else{
+                    return 0;
                 }
             }
+        };
+        PriorityQueue<Page> orderedQueue = new PriorityQueue(list.size(),comparator);
+        int counter = 0;
+        for (Page page: list ) {
+            page.setPageRank(pageRank[counter][0]);
+            orderedQueue.add(page);
+            counter++;
         }
-
+        return orderedQueue;
     }
 
     /**
-     * Create a adjancy Matrix from the graph
+     * Print vertex(Pages) and their edges. Return string
      */
-    private Double[][] createAM() {
-        return webGraph.createAM();
+    public String printFromAdjList() {
+        String str = "";
+        if (webGraph.getSize() <= 1) {
+            return "The keyword provided was not found in the seed Webpage!";
+        } else {
+            List<Page> list = webGraph.getOrderedList();
+            for (Page key : list) {
+                str +="Vertex found at level "+key.getSearchLevel()+": " + key.getUrl()+"\n";
+                List<Page> listEdge = webGraph.getEdge(key);
+                for (Page element : listEdge) {
+                    str +="    Edges found at level "+key.getSearchLevel()+": " + element.getUrl()+"\n";
+                }
+            }
+        }
+        return str;
+    }
+
+    /**
+     *  Print Pages from the orderQueue by page Rank factor
+     */
+     public String printFromOrderedList(){
+        Queue<Page> pages = this.orderPagesByRank();
+        String str = "";
+
+        for (Page page:pages) {
+            str +=page.getUrl()+"\n";
+        }
+        return str;
     }
 
     public static void main(String[] args) throws IOException {
@@ -197,8 +233,11 @@ public class Spider {
         String aut = "http://aut.ac.nz";
         String jsoup = "https://jsoup.org";
         Spider spider = new Spider(aut);
-        spider.searchInternet("aut");
-        spider.printFromAdjList();
+        spider.searchInternet("Students");
+        System.out.println(spider.printFromAdjList());
+        System.out.println();
+        System.out.println(spider.printFromOrderedList());
+
 
 
     }
