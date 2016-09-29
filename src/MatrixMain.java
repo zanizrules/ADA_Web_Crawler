@@ -3,27 +3,26 @@
  *
  * @author Everybody's
  */
-public class MatrixMain {
+class MatrixMain {
 
     private static Double[][] pageRankMatrix(Double[][] aM, double df) {
         int size = aM.length;
-        Double[][] pageRankMatrix = aM;
         for (int i = 0; i < size; i++) {
             int outgoing = 0;
             for (int j = 0; j < size; j++) {
-                if (pageRankMatrix[i][j] == 1) {
+                if (aM[i][j] == 1) {
                     outgoing++;
                 }
             }
             for (int k = 0; k < size; k++) {
-                if (pageRankMatrix[i][k] == 1) {
-                    pageRankMatrix[i][k] = (double) ((1 - (df)) / size) + (df / outgoing);
+                if (aM[i][k] == 1) {
+                    aM[i][k] = ((1 - (df)) / size) + (df / outgoing);
                 } else {
-                    pageRankMatrix[i][k] = (double) (1 - (df)) / size;
+                    aM[i][k] = (1 - (df)) / size;
                 }
             }
         }
-        return pageRankMatrix;
+        return aM;
     }
 
     private static Double[][] transpose(Double[][] aM) {
@@ -37,7 +36,7 @@ public class MatrixMain {
         return transposedMatrix;
     }
 
-    public static Double[][] pageRank(Double[][] aM, double df) {
+    static Double[][] pageRank(Double[][] aM, double df) {
         Double[][] pageRankMatrix = pageRankMatrix(aM, df);
         Double[][] transposedMatrix = transpose(pageRankMatrix);
         Double[][] vector = new Double[pageRankMatrix.length][1];
@@ -49,13 +48,12 @@ public class MatrixMain {
             Double[][] prevVector = vector;
             vector = matrixMultiply(transposedMatrix, vector);
             changing = false;
-            for (int i = 0; i < vector.length; i++) {
+            for (int i = 0; i < vector.length; i++)
                 if (vector[i][0] > (prevVector[i][0] + 0.01)
                         || vector[i][0] < (prevVector[i][0] - 0.01)) {
                     changing = true;
-                     break;
+                    break;
                 }
-            }
         }
         return vector;
     }
@@ -87,16 +85,16 @@ public class MatrixMain {
         return vector;
     }
 
-    public static double norm(Double[][] vector) {
+    private static double norm(Double[][] vector) {
         double norm = 0;
-        for (int i = 0; i < vector.length; i++) {
-            norm += Math.pow(vector[i][0], 2);
+        for (Double[] aVector : vector) {
+            norm += Math.pow(aVector[0], 2);
         }
         return Math.sqrt(norm);
 
     }
 
-    public static Double[][] matrixAddtion(Double[][] first, Double[][] second) {
+    private static Double[][] matrixAddtion(Double[][] first, Double[][] second) {
 
         int size = first.length;
         Double[][] adjMatrix = new Double[size][size];
@@ -113,7 +111,7 @@ public class MatrixMain {
         return adjMatrix;
     }
 
-    public static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
+    private static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
 
         int aRows = A.length;
         int aColumns = A[0].length;
@@ -142,8 +140,8 @@ public class MatrixMain {
         return C;
     }
 
-    public static Double[][] IdentityMatrix(Double[][] matrix) {
-        int size = (int) (matrix.length);
+    private static Double[][] IdentityMatrix(Double[][] matrix) {
+        int size = matrix.length;
         Double[][] adjMatrix = new Double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -159,14 +157,13 @@ public class MatrixMain {
     }
 
     public static void printMatrix(Double[][] matrix, boolean isInt) {
-        int rows = matrix.length;
         int colums = matrix[0].length;
-        for (int i = 0; i < rows; i++) {
+        for (Double[] aMatrix : matrix) {
             for (int j = 0; j < colums; j++) {
                 if (isInt) {
-                    System.out.print(matrix[i][j].intValue() + " ");
+                    System.out.print(aMatrix[j].intValue() + " ");
                 } else {
-                    System.out.print(matrix[i][j] + " ");
+                    System.out.print(aMatrix[j] + " ");
                 }
 
             }

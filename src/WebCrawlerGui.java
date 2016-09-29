@@ -10,8 +10,8 @@ import java.io.IOException;
  * GUI Class created for Web Crawler.
  */
 public class WebCrawlerGui extends JPanel {
-    public final static int PANEL_WIDTH = 400; // size of panel
-    public final static int PANEL_HEIGHT = 400;
+    private final static int PANEL_WIDTH = 400; // size of panel
+    private final static int PANEL_HEIGHT = 400;
 
     private static JFrame frame;
     private JLabel label, inputUrlLabel;
@@ -19,7 +19,7 @@ public class WebCrawlerGui extends JPanel {
     private JButton button;
     private BufferedImage img;
 
-    public WebCrawlerGui() {
+    private WebCrawlerGui() {
         super(new BorderLayout());
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         text = new JTextArea();
@@ -28,7 +28,7 @@ public class WebCrawlerGui extends JPanel {
 
 
 
-        label = new JLabel("Vini + Shane Web Crawler");
+        label = new JLabel("Vini & Shane Web Crawler");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font(label.getName(), Font.BOLD, 28));
 

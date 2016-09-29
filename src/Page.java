@@ -2,8 +2,9 @@ import java.net.URL;
 
 /**
  * Created by Everybody's on 27/09/2016.
+ *
  */
-public class Page implements Comparable<Page> {
+class Page implements Comparable<Page> {
 
     private URL url;
     private Double pageRank;
@@ -13,24 +14,24 @@ public class Page implements Comparable<Page> {
         this.url = url;
     }
 
-    public Page(URL url, int searchLevel) {
+    Page(URL url, int searchLevel) {
         this.url = url;
         this.searchLevel = searchLevel;
     }
 
-    public URL getUrl() {
+    URL getUrl() {
         return url;
     }
 
-    public Double getPageRank() {
+    Double getPageRank() {
         return pageRank;
     }
 
-    public int getSearchLevel() {
+    int getSearchLevel() {
         return searchLevel;
     }
 
-    public void setPageRank(Double pageRank) {
+    void setPageRank(Double pageRank) {
         this.pageRank = pageRank;
     }
 

@@ -1,21 +1,21 @@
 
 import java.util.*;
 
-public class AdjList<E> {
+class AdjList<E> {
 
     private ArrayList<E> orderedList;
     private Map<E, List<E>> adjacency_list;
 
-    public AdjList() {
-        adjacency_list = new HashMap<E, List<E>>();
-        orderedList = new ArrayList();
+    AdjList() {
+        adjacency_list = new HashMap<>();
+        orderedList = new ArrayList<>();
     }
 
-    public void addVertex(E vertex) {
+    void addVertex(E vertex) {
         if (adjacency_list.containsKey(vertex)) {
             return;
         }
-        List<E> list = new LinkedList();
+        List<E> list = new LinkedList<>();
         adjacency_list.put(vertex, list);
         orderedList.add(vertex);
     }
@@ -28,7 +28,7 @@ public class AdjList<E> {
         orderedList.remove(vertex);
     }
 
-    public void addEdge(E startVertex, E endVertex) {
+    void addEdge(E startVertex, E endVertex) {
         List<E> list = adjacency_list.get(startVertex);
         if (!list.contains(endVertex)) {
             list.add(endVertex);
@@ -52,23 +52,23 @@ public class AdjList<E> {
         }
     }
 
-    public List<E> getEdge(E startVertex) {
+    List<E> getEdge(E startVertex) {
         return adjacency_list.get(startVertex);
     }
 
-    public int getSize() {
+    int getSize() {
         return this.adjacency_list.size();
     }
 
-    public Iterator<E> iterator() {
+    Iterator<E> iterator() {
         return adjacency_list.keySet().iterator();
     }
 
-    public List getOrderedList(){
+    List<E> getOrderedList(){
         return orderedList;
     }
 
-    public Double[][] createAM() {
+    Double[][] createAM() {
         int size = this.orderedList.size();
         Double[][] ajcMatrix = new Double[size][size];
         for (int i = 0; i < size; i++) {

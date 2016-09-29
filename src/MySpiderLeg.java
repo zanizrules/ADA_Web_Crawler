@@ -24,11 +24,11 @@ public class MySpiderLeg {
     private String title;
     private String description;
     private String keyWords;
-    private List meta;
+    private List<Element> meta;
     private List<URL> Hyperlinks;
-    private List Images;
+    private List<Element> Images;
 
-    public MySpiderLeg(URL url, int levelSearchFound) throws IOException {
+    private MySpiderLeg(URL url, int levelSearchFound) throws IOException {
 
         doc = Jsoup.connect(url.toString()).
                 userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 "
@@ -36,79 +36,65 @@ public class MySpiderLeg {
                 .timeout(10 * 1000).get();
         this.url = url;
         this.levelSearchFound = levelSearchFound;
-        this.title = this.getTitle(url.toString());
-        this.description = this.getDescriptionFromPage(url.toString());
-        this.keyWords = this.getKeywordsfromPage(url.toString());
-        this.meta = this.getMeta(url.toString());
-        this.Hyperlinks = this.getHyperlink(url.toString());
-        this.Images = this.getImages(url.toString());
+        this.title = this.getTitle();
+        this.description = this.getDescriptionFromPage();
+        this.keyWords = this.getKeywordsfromPage();
+        this.meta = this.getMeta();
+        this.Hyperlinks = this.getHyperlink();
+        this.Images = this.getImages();
 
     }
 
-    private Elements getMeta(String url) throws IOException {
-        Elements meta = doc.getElementsByTag("meta");
-        return meta;
+    private Elements getMeta() throws IOException {
+        return doc.getElementsByTag("meta");
     }
 
-    private String getTitle(String url) throws IOException {
-        String title;
-        title = doc.title();
-        return title;
+    private String getTitle() throws IOException {
+        return doc.title();
     }
 
-    private String getDescriptionFromPage(String url) throws IOException {
+    private String getDescriptionFromPage() throws IOException {
         Elements descriptionElement = doc.select("meta[name=description]");
         String description = "";
-        Iterator<Element> itr = descriptionElement.iterator();
-        while (itr.hasNext()) {
-            Element link = itr.next();
+        for (Element link : descriptionElement) {
             description = link.attr("content");
 
         }
         return description;
     }
 
-    private String getKeywordsfromPage(String url) throws IOException {
+    private String getKeywordsfromPage() throws IOException {
 
         Elements keyElements = doc.select("meta[name=keywords]");
         String keyWords = "";
-        Iterator<Element> itr = keyElements.iterator();
-        while (itr.hasNext()) {
-            Element link = itr.next();
+        for (Element link : keyElements) {
             keyWords += link.attr("content");
-
         }
         return keyWords;
 
     }
 
-    private ArrayList<URL> getHyperlink(String url) throws MalformedURLException, IOException {
+    private ArrayList<URL> getHyperlink() throws IOException {
 
         Elements links = doc.select("a[href]"); // a with href
-        ArrayList<URL> absoluteLinks = new ArrayList();
+        ArrayList<URL> absoluteLinks = new ArrayList<>();
 
-        Iterator<Element> itr = links.iterator();
-        while (itr.hasNext()) {
-            Element link = itr.next();
+        for (Element link : links) {
             String absHref = link.attr("abs:href");
             absoluteLinks.add(new URL(absHref));
         }
         return absoluteLinks;
     }
 
-    private Elements getImages(String url) throws IOException {
-        Elements pngs = doc.select("img");
-        return pngs;
+    private Elements getImages() throws IOException {
+        return doc.select("img");
     }
 
     public static void print(List list) {
-        Iterator itr = list.iterator();
-        while (itr.hasNext()) {
-            System.out.println(itr.next());
-        }
+        list.forEach(System.out::println);
     }
 
-    public boolean findKeyWord(String keyword) {
+    private boolean findKeyWord(String keyword) {
 
         if (title.toLowerCase().contains(keyword.toLowerCase())) {
             return true;
@@ -117,19 +103,18 @@ public class MySpiderLeg {
         } else if (keyWords.toLowerCase().contains(keyword.toLowerCase())) {
             return true;
         }
-        ArrayList searchAll = new ArrayList();
+        ArrayList<Object> searchAll = new ArrayList<>();
         searchAll.addAll(meta);
         searchAll.addAll(Hyperlinks);
         searchAll.addAll(Images);
-        Iterator<Object> itr = searchAll.iterator();     
-        while (itr.hasNext()) {
-            String link = itr.next().toString();
+        for (Object aSearchAll : searchAll) {
+            String link = aSearchAll.toString();
 //            System.out.println(link);
-            if(link.toLowerCase().contains(keyword.toLowerCase())){
+            if (link.toLowerCase().contains(keyword.toLowerCase())) {
 //                System.out.println("KeyWord Found");
                 return true;
             }
-            
+
         }
     
         return false;
@@ -150,7 +135,7 @@ public class MySpiderLeg {
     public static void main(String[] args) throws IOException {
 
         String aut = "http://aut.ac.nz";
-        String jsoup = "https://jsoup.org";
+        //String jsoup = "https://jsoup.org";
         URL url = new URL(aut);
         MySpiderLeg mine = new MySpiderLeg(url,0);
         System.out.println(mine.findKeyWord("aut"));
