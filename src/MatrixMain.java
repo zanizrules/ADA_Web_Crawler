@@ -1,5 +1,6 @@
 
 /**
+ * TODO: Check this class against my own version and to any refactoring.
  *
  * @author Everybody's
  */

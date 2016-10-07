@@ -8,7 +8,7 @@ import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
- *
+ * TODO: Refactoring, commenting -> Will get Vini to explain, and I translate anything not obvious into comments.
  * @author Everybody's
  */
 public class Spider {
@@ -27,8 +27,6 @@ public class Spider {
     private void searchInternet(String KeyWord) throws IOException {
         webCrawler(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
     }
-
-
 
     /**
      * BFS - searchs the internet for a keyword storing the relevant webPages. Edges are also stored.

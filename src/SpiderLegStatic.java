@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -11,7 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
+ * TODO: Refactoring and comments, as per Spider.java
  * @author Everybody's
  */
 public class SpiderLegStatic {
@@ -97,4 +95,3 @@ public class SpiderLegStatic {
     }
 
 }
-

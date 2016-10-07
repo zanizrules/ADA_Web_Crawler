@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
+ * TODO: See if this can be removed from the working GitHub code.
  * @author Everybody's
  */
 public class MySpiderLeg {

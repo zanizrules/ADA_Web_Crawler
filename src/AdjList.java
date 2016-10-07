@@ -2,7 +2,13 @@
 import java.util.*;
 
 class AdjList<E> {
-
+    /*
+        TODO: Go through this class with Vini.
+        I am wanting to:
+            - change the name of this class to perhaps Graph.
+            - Rename variables, edge set and node/vertex set?
+            - Refactor through the code.
+     */
     private ArrayList<E> orderedList;
     private Map<E, List<E>> adjacency_list;
 
