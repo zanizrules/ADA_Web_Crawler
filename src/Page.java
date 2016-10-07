@@ -11,6 +11,7 @@ class Page implements Comparable<Page> {
     private URL url;
     private Double pageRank;
     private int searchLevel;
+   // private String title, description;
 
     Page(URL url) {
         this(url, 0);
@@ -38,35 +39,13 @@ class Page implements Comparable<Page> {
     }
 
     public String toString() {
-        String result = "Test Website Title\n" + url.toString()
-                + "\nThis is a description used for testing purposes. " +
-                "This will show a description relating to the website";
-        return result;
+        return url.toString();
     }
 
     public JLabel getLabel() { // 70, 40, 15
-        JLabel result = new JLabel("<html><a href=\"url\">Test Website Title</a> <br>" +
-                "&#8195;" + url.toString() + "<br>" +
-                "&#8194;" +"Test Description..." + "</html>");
-
-
-//        result.setFont(new Font(result.getName(), Font.BOLD, 20));
-//        result.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 30));
-//
-//        JLabel link = new JLabel(url.toString());
-//        link.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 20));
-//
-//        JLabel description = new JLabel("Test Description...");
-//
-//        link.add(description);
-//        result.add(link);
-//
-//        double height = link.getPreferredSize().getHeight()
-//                + description.getPreferredSize().getHeight();
-//
-//        link.setPreferredSize(new Dimension(SearchResultsGui.PANEL_WIDTH, (int) height));
-//        height += result.getPreferredSize().getHeight();
-//        result.setPreferredSize(new Dimension(SearchResultsGui.PANEL_WIDTH, (int) height));
+        JLabel result = new JLabel("<html>&#8195;<a style=\"font-size: large;\" href=\""+url.toString()+"\">Test Title</a>" +
+                "<p style=\"color: green; padding: 0 0 0 20px;\">" + url.toString() + "</p>" +
+                "<p style=\"color: gray; padding: 0 0 0 20px;\">" + "Test Description..." + "</p></html>");
         return result;
     }
 
