@@ -49,7 +49,7 @@ class Graph<E> {
         return orderedList;
     }
 
-    Double[][] createAM() {
+    Double[][] createAdjacencyMatrix() {
         int size = this.orderedList.size();
         Double[][] ajcMatrix = new Double[size][size];
         for (int i = 0; i < size; i++) {

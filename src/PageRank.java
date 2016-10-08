@@ -1,10 +1,5 @@
 
-/**
- * TODO: Check this class against my own version and to any refactoring.
- *
- * @author Everybody's
- */
-class MatrixMain {
+class PageRank {
 
     private static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
 

@@ -17,14 +17,19 @@ import javax.net.ssl.SSLHandshakeException;
 public class Spider {
 
     private static Graph<Page> webGraph;
-    private static final int MAX_LEVEL_SEARCH = 5; // Sets how far Deep algorithm will search
-    private static final int MAX_PAGE_PER_SEARCH = 30;//Limits the number of pages per level
+    private static final int MAX_LEVEL_SEARCH = 10; // Sets how far Deep algorithm will search
+    private static final int MAX_PAGE_PER_SEARCH = 50;//Limits the number of pages per level
 
     Spider(){
         webGraph = new Graph<>(); // DTS
     }
 
-    //Search each seed link for the keyword
+    /**
+     * Search each seed link for the keyword
+     * @param list
+     * @param KeyWord
+     * @throws IOException
+     */
     public void searchInternet(Collection<String> list,String KeyWord) throws IOException{
         for (String str : list) {
            URL seedURL = new URL(str);
@@ -160,11 +165,30 @@ public class Spider {
     }
 
     /**
+     * Class will print a list of Pages' URL to a file of certain given name
+     * @param list
+     * @param filename
+     */
+    private void printToFile( Collection<Page>list,String filename){
+        PrintWriter outputStream = null;
+        try {
+            outputStream = new PrintWriter(new FileOutputStream(filename+".txt"));
+            for (Page page : list ) {
+                outputStream.println(page.getUrl().toString());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("printToFile method failed. Unable to create File");
+        }
+        outputStream.close();
+    }
+
+    /**
      * Create a adjancy Matrix from the graph. Calculates the Pagerank of each page.
      * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
     public Queue<Page> orderPagesByRank() {
-        Double[][] pageRank = MatrixMain.pageRank(webGraph.createAM(),0.15);
+        Double[][] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(),0.15);
         List<Page> list = webGraph.getOrderedList();
         Comparator<Page> comparator = (o1, o2) -> {
             if(o1.getPageRank() > o2.getPageRank()){
@@ -189,29 +213,10 @@ public class Spider {
     }
 
     /**
-     * Class will print a list of Pages' URL to a file of certain given name
-     * @param list
-     * @param filename
-     */
-    private void printToFile( Collection<Page>list,String filename){
-        PrintWriter outputStream = null;
-        try {
-            outputStream = new PrintWriter(new FileOutputStream(filename+".txt"));
-            for (Page page : list ) {
-                outputStream.println(page.getUrl().toString());
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("printToFile method failed. Unable to create File");
-        }
-        outputStream.close();
-    }
-
-    /**
      * Print vertex(Pages) and their edges. Return string
      * Not use for the GUI only CUI
      */
-    private String printFromAdjList() {
+    public String printFromAdjList() {
         String str = "";
         if (webGraph.getSize() <= 1) {
             return "The keyword provided was not found in the seed Webpage!";
@@ -232,7 +237,7 @@ public class Spider {
      *  Print Pages from the orderQueue by page Rank factor
      *  Not use for the GUI only CUI
      */
-    private String printFromOrderedList(){
+    public String printFromOrderedList(){
         Queue<Page> pages = this.orderPagesByRank();
         String str = "";
 
@@ -241,66 +246,6 @@ public class Spider {
             str += page.getUrl()+"\nPageRank value: "+page.getPageRank()+"\n";
         }
         return str;
-    }
-
-    public static void main(String[] args) {
-        Spider spider = new Spider();
-        //This part allows fast test without user input
-        String AUT = "https://aut.ac.nz";//String
-        String jsoup = "https://jsoup.org";
-        String StackOF="https://stackoverflow.com/";
-        String KeyWord = "Java";
-        //Creates a list of seeds Links
-        ArrayList<String> links = new ArrayList();
-        links.add(AUT);
-        links.add(jsoup);
-        links.add(StackOF);
-
-//      //Test multiple seeds
-        try {
-            spider.searchInternet(links, KeyWord);
-            System.out.println(spider.printFromAdjList());
-            System.out.println();
-            System.out.println("Printing Webpages based on its page rank value");
-            System.out.println(spider.printFromOrderedList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("test");
-        }
-
-
-//        Menu created for user input, but commented out due to GUI implementation
-//        Scanner scan = new Scanner(System.in);
-//        boolean incorrectForm = true;
-//        String inputUrl = "";
-//        String Keyword = "";
-//        System.out.println("Search Engine. Please asnwer the Followings:");
-//        while (incorrectForm) {
-//
-//            System.out.print("1.Please inform a seed URL where the seach will statr from?\n>");
-//            inputUrl = scan.nextLine();
-//            try {
-//                URL url = new URL(inputUrl);
-//                URLConnection conn = url.openConnection();
-//                conn.connect();
-//                incorrectForm = false;
-//            } catch (MalformedURLException e) {
-//                System.out.println("Please enter a valid URL. Example:");
-//                System.out.println("http://aut.ac.nz , https://jsoup.org , http://stackoverflow.com/");
-//            } catch (IOException e) {
-//                System.out.println("Please enter a valid URL. Example: http://aut.ac.nz");
-//            }
-//        }
-//        System.out.print("2.What are we seaching?(String or single word)\n>");
-//        Keyword = scan.nextLine();
-//        System.out.println("Please wait while search is performed");
-//        spider.searchInternet(inputUrl,Keyword);
-//        spider.printFromAdjList();
-//        System.out.println("Printing Webpages based on its page rank value");
-//        System.out.println(spider.printFromOrderedList());
-
-
-
     }
 
 }

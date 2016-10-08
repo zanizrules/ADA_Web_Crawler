@@ -170,7 +170,7 @@ public class SpiderLeg {
 
     }
 
-    //Print example for question 1
+    //Example for question 1, prints information retrived by the methods above
     public static void main(String[] args)  {
 
         String aut = "http://url.ac.nz";//String
