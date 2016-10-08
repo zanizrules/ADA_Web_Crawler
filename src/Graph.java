@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-class AdjList<E> {
+class Graph<E> {
     /*
         TODO: Go through this class with Vini.
         I am wanting to:
@@ -12,7 +12,7 @@ class AdjList<E> {
     private ArrayList<E> orderedList;
     private Map<E, List<E>> adjacency_list;
 
-    AdjList() {
+    Graph() {
         adjacency_list = new HashMap<>();
         orderedList = new ArrayList<>();
     }
@@ -26,30 +26,10 @@ class AdjList<E> {
         orderedList.add(vertex);
     }
 
-    public void removeVertex(E vertex) {
-        if (!adjacency_list.containsKey(vertex)) {
-            return;
-        }
-        adjacency_list.remove(vertex);
-        orderedList.remove(vertex);
-    }
-
     void addEdge(E startVertex, E endVertex) {
         List<E> list = adjacency_list.get(startVertex);
         if (!list.contains(endVertex)) {
             list.add(endVertex);
-        }
-    }
-
-    public void removeEdge(E startVertex, E endVertex) {
-        if (!adjacency_list.containsKey(startVertex) || !adjacency_list.containsKey(endVertex)) {
-            return;
-        }
-
-        List<E> list = adjacency_list.get(startVertex);
-
-        if (!list.contains(endVertex)) {
-            list.remove(endVertex);
         }
     }
 
@@ -91,13 +71,5 @@ class AdjList<E> {
         return ajcMatrix;
     }
 
-    public void print() {
-        for (E key : orderedList) {
-            System.out.println("Vertex: " + key);
-            List<E> listEdge = this.getEdge(key);
-            for (E element : listEdge) {
-                System.out.println("    Edges: " + element);
-            }
-        }
-    }
+
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -17,18 +16,19 @@ import javax.net.ssl.SSLHandshakeException;
  */
 public class Spider {
 
-    private static AdjList<Page> webGraph;
+    private static Graph<Page> webGraph;
     private static final int MAX_LEVEL_SEARCH = 5; // Sets how far Deep algorithm will search
     private static final int MAX_PAGE_PER_SEARCH = 30;//Limits the number of pages per level
 
     Spider(){
-        webGraph = new AdjList<>(); // DTS
+        webGraph = new Graph<>(); // DTS
     }
 
     //Search each seed link for the keyword
     public void searchInternet(Collection<String> list,String KeyWord) throws IOException{
         for (String str : list) {
            URL seedURL = new URL(str);
+
 //            Thread thread = new Thread(new Runnable() {
 //                @Override
 //                public void run() {
@@ -209,6 +209,7 @@ public class Spider {
 
     /**
      * Print vertex(Pages) and their edges. Return string
+     * Not use for the GUI only CUI
      */
     private String printFromAdjList() {
         String str = "";
@@ -229,6 +230,7 @@ public class Spider {
 
     /**
      *  Print Pages from the orderQueue by page Rank factor
+     *  Not use for the GUI only CUI
      */
     private String printFromOrderedList(){
         Queue<Page> pages = this.orderPagesByRank();
@@ -236,7 +238,7 @@ public class Spider {
 
         while(!pages.isEmpty()){
             Page page = pages.poll();
-            str += page.getUrl()+"\n"+page.getPageRank()+"\n";
+            str += page.getUrl()+"\nPageRank value: "+page.getPageRank()+"\n";
         }
         return str;
     }
@@ -254,7 +256,7 @@ public class Spider {
         links.add(jsoup);
         links.add(StackOF);
 
-//      //Test
+//      //Test multiple seeds
         try {
             spider.searchInternet(links, KeyWord);
             System.out.println(spider.printFromAdjList());
