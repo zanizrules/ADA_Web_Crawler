@@ -1,10 +1,5 @@
-import javax.swing.*;
 import java.net.URL;
 
-/**
- * @author Shane Birdsall, Vinicius Ferreira.
- *         Created on 27/09/2016.
- */
 class Page implements Comparable<Page> {
 
     private URL url;

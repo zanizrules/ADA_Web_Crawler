@@ -58,7 +58,7 @@ public class Spider {
 
             try {
                 //get all hyperlinks that frontLink contains
-                List<URL> hyperlinks = SpiderLegStatic.getHyperlink(frontLink.getUrl().toString());
+                List<URL> hyperlinks = SpiderLeg.getHyperlink(frontLink.getUrl().toString());
                 Iterator<URL> iterator = hyperlinks.iterator(); // gets iterator
                 int numOfPages = 0;
                 while (iterator.hasNext() && numOfPages < MAX_PAGE_PER_SEARCH) {
@@ -97,7 +97,7 @@ public class Spider {
     }
 
     /**
-     * Return a existentt Page from the graph
+     * Return a existent Page from the graph
      * @param url Page URL
      * @return Page
      */
@@ -118,7 +118,7 @@ public class Spider {
     private  boolean findKeyWord(URL url,String keyword) {
         boolean found = false;
         try{
-            Elements meta = SpiderLegStatic.getMeta(url.toString());
+            Elements meta = SpiderLeg.getMeta(url.toString());
             String link  = meta.toString();
             found =link.toLowerCase().contains(keyword.toLowerCase());
         } catch (IOException e) {
@@ -189,6 +189,18 @@ public class Spider {
 
     public static void main(String[] args) throws IOException {
 
+        //This part allows fast test without user input
+        String aut = "http://aut.ac.nz";
+        //String jsoup = "https://jsoup.org";
+        Spider spider = new Spider(aut);
+        spider.searchInternet("Students");
+        System.out.println(spider.printFromAdjList());
+        System.out.println();
+        System.out.println("Printing Webpages based on its page rank value");
+        System.out.println(spider.printFromOrderedList());
+
+
+        //Menu created for user input, but commented out due to GUI implementation
 //        Scanner scan = new Scanner(System.in);
 //        boolean incorrectForm = true;
 //        String inputUrl = "";
@@ -217,20 +229,6 @@ public class Spider {
 //        spider.searchInternet(Keyword);
 //        spider.printFromAdjList();
 
-//        Properties props = new Properties(System.getProperties());
-//        props.put("http.proxySet", "true"); // true if using proxy
-//        props.put("http.proxyHost", "cache.aut.ac.nz"); // AUT specific
-//        props.put("http.proxyPort", "3128"); // AUT specific
-//        System.setProperties(props);
-
-        //This part allows fast test without user input
-        String aut = "http://aut.ac.nz";
-        //String jsoup = "https://jsoup.org";
-        Spider spider = new Spider(aut);
-        spider.searchInternet("Students");
-        System.out.println(spider.printFromAdjList());
-        System.out.println();
-        System.out.println(spider.printFromOrderedList());
 
 
 

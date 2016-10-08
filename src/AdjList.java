@@ -41,11 +41,6 @@ class AdjList<E> {
         }
     }
 
-    public void addUndirectedEdges(E startVertex, E endVertex) {
-        this.addEdge(startVertex, endVertex);
-        this.addEdge(endVertex, startVertex);
-    }
-
     public void removeEdge(E startVertex, E endVertex) {
         if (!adjacency_list.containsKey(startVertex) || !adjacency_list.containsKey(endVertex)) {
             return;
