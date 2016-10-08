@@ -21,7 +21,7 @@ public class SearchResultsGui extends JPanel implements ActionListener {
     private JList results;
     private WebCrawlerGui searchMenu;
     private SearchResults searchResults;
-    private Spider spider;
+    Spider spider;
 
     public SearchResultsGui(WebCrawlerGui menu) {
         super(new BorderLayout());
@@ -38,29 +38,6 @@ public class SearchResultsGui extends JPanel implements ActionListener {
 
             spider = new Spider(searchMenu.getUrlText());
             spider.searchInternet(searchMenu.getKeywordText());
-
-            URL a = new URL("https://www.youtube.com/watch?v=Q0oIoR9mLwc");
-            URL a2 = new URL("https://www.cool.com");
-            Page b = new Page(a);
-            Page b2 = new Page(a2);
-
-//            LinkedList<Page> test = new LinkedList<>();
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-//            test.add(b);
-//            test.add(b2);
-
-
             searchResults = new SearchResults(spider.orderPagesByRank());
             // results.addListSelectionListener(this);
 
@@ -77,7 +54,8 @@ public class SearchResultsGui extends JPanel implements ActionListener {
         initialiseFrame();
     }
 
-    public void initialiseFrame() {
+
+    void initialiseFrame() {
         if (frame == null) {
             frame = new JFrame("Search Results");
         }
@@ -102,24 +80,8 @@ public class SearchResultsGui extends JPanel implements ActionListener {
 
     public void goBack() {
         frame.setVisible(false);
-        searchMenu.setVisible(true);
+        searchMenu.makeVisible();
     }
-
-//    public static void main(String[] args) {
-//       // SearchResultsGui gui = new SearchResultsGui();
-//        initialiseFrame(gui);
-//
-//        //gets the dimensions for screen width and height to calculate center
-//        Toolkit toolkit = Toolkit.getDefaultToolkit();
-//        Dimension dimension = toolkit.getScreenSize();
-//        int screenHeight = dimension.height;
-//        int screenWidth = dimension.width;
-//        frame.pack(); // resize frame appropriately for its content
-//        //positions frame in center of screen
-//        frame.setLocation(new Point((screenWidth / 2) - (frame.getWidth() / 2),
-//                (screenHeight / 2) - (frame.getHeight() / 2)));
-//        frame.setVisible(true);
-//    }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {

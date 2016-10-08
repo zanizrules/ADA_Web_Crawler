@@ -85,6 +85,10 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         }
     }
 
+    public void makeVisible() {
+        frame.setVisible(true);
+    }
+
     public static void main(String[] args) {
         WebCrawlerGui gui = new WebCrawlerGui();
         initialiseFrame(gui);
@@ -113,11 +117,13 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
                     // Tell user they have not given a search term
                     JOptionPane.showMessageDialog(this, "Please enter a Search Term", "Error Occurred", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    setVisible(false);
+                    JOptionPane.showMessageDialog(this, "Please wait while your search is processed", "Searching...", JOptionPane.INFORMATION_MESSAGE);
+
                     if (searchResultsScreen == null) {
                         searchResultsScreen = new SearchResultsGui(this);
                     }
                     searchResultsScreen.initialiseFrame();
+                    frame.setVisible(false);
                 }
             }
         } else if (source.equals(randomInputButton)) {
