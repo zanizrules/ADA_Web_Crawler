@@ -19,7 +19,7 @@ public class Spider {
 
     private static AdjList<Page> webGraph;
     private static final int MAX_LEVEL_SEARCH = 5; // Sets how far Deep algorithm will search
-    private static final int MAX_PAGE_PER_SEARCH = 50;//Limits the number of pages per level
+    private static final int MAX_PAGE_PER_SEARCH = 30;//Limits the number of pages per level
 
     Spider(){
         webGraph = new AdjList<>(); // DTS
@@ -168,12 +168,13 @@ public class Spider {
         List<Page> list = webGraph.getOrderedList();
         Comparator<Page> comparator = (o1, o2) -> {
             if(o1.getPageRank() > o2.getPageRank()){
-                return 1;
-            }else if (o1.getPageRank() < o2.getPageRank()){
                 return -1;
-            }else{
-                return 0;
             }
+            if (o1.getPageRank() < o2.getPageRank()){
+                return 1;
+            }
+            return 0;
+
         };
         PriorityQueue<Page> orderedQueue = new PriorityQueue<>(list.size(),comparator);
         int counter = 0;
@@ -233,30 +234,27 @@ public class Spider {
         Queue<Page> pages = this.orderPagesByRank();
         String str = "";
 
-        for (Page page:pages) {
-            str +=page.getUrl()+"\n";
+        while(!pages.isEmpty()){
+            Page page = pages.poll();
+            str += page.getUrl()+"\n"+page.getPageRank()+"\n";
         }
         return str;
     }
 
     public static void main(String[] args) {
-
         Spider spider = new Spider();
-
         //This part allows fast test without user input
         String AUT = "https://aut.ac.nz";//String
         String jsoup = "https://jsoup.org";
         String StackOF="https://stackoverflow.com/";
         String KeyWord = "Java";
-
         //Creates a list of seeds Links
         ArrayList<String> links = new ArrayList();
         links.add(AUT);
         links.add(jsoup);
         links.add(StackOF);
 
-
-//       //Test
+//      //Test
         try {
             spider.searchInternet(links, KeyWord);
             System.out.println(spider.printFromAdjList());

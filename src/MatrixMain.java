@@ -16,10 +16,14 @@ class MatrixMain {
                 }
             }
             for (int k = 0; k < size; k++) {
-                if (aM[i][k] == 1) {
-                    aM[i][k] = ((1 - (df)) / size) + (df / outgoing);
-                } else {
-                    aM[i][k] = (1 - (df)) / size;
+                if(outgoing == 0){
+                    aM[i][k] = (double) 1/ size;
+                }else{
+                    if (aM[i][k] == 1) {
+                        aM[i][k] = ((1 - (df)) / size) + (df / outgoing);
+                    } else {
+                        aM[i][k] = (1 - (df)) / size;
+                    }
                 }
             }
         }
@@ -50,8 +54,8 @@ class MatrixMain {
             vector = matrixMultiply(transposedMatrix, vector);
             changing = false;
             for (int i = 0; i < vector.length; i++)
-                if (vector[i][0] > (prevVector[i][0] + 0.01)
-                        || vector[i][0] < (prevVector[i][0] - 0.01)) {
+                if (vector[i][0] > (prevVector[i][0] + 0.0001)
+                        || vector[i][0] < (prevVector[i][0] - 0.0001)) {
                     changing = true;
                     break;
                 }
