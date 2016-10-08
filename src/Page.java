@@ -3,9 +3,9 @@ import java.net.URL;
 
 class Page implements Comparable<Page> {
 
-    private URL url;
-    private Double pageRank;
-    private int searchLevel;
+    private URL url;//stores page's URL
+    private Double pageRank; // store page rank values
+    private int searchLevel;//Store which level page was found
    // private String title, description;
 
     Page(URL url) {
