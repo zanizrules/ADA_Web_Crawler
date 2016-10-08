@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.URL;
 
 class Page implements Comparable<Page> {
@@ -35,9 +36,14 @@ class Page implements Comparable<Page> {
 
 
     public String toString() {
-        return ("<html>&#8195;<a style=\"font-size: large;\" href=\""+url.toString()+"\">"+ url.getHost() +"</a>" +
-                "<p style=\"color: green; padding: 0 0 0 20px;\">" + url.toString() + "</p>" +
-                "<p style=\"color: gray; padding: 0 0 0 20px;\">" + "test description" + "</p></html>");
+        try {
+            return ("<html>&#8195;<a style=\"font-size: large;\" href=\""+url.toString()+"\">"+ SpiderLeg.getTitle(url.toString()) +"</a>" +
+                    "<p style=\"color: green; padding: 0 0 0 20px;\">" + url.toString() + "</p>" +
+                    "<p style=\"color: gray; padding: 0 0 0 20px;\">" + SpiderLeg.getDescriptionFromPage(url.toString()) + "</p></html>");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
