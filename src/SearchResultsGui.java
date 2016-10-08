@@ -36,8 +36,8 @@ public class SearchResultsGui extends JPanel implements ActionListener {
 
         try {
 
-            spider = new Spider(searchMenu.getUrlText());
-            spider.searchInternet(searchMenu.getKeywordText());
+            spider = new Spider();
+            spider.searchInternet(searchMenu.getUrlText(),searchMenu.getKeywordText());
             searchResults = new SearchResults(spider.orderPagesByRank());
             // results.addListSelectionListener(this);
 

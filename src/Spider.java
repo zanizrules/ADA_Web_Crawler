@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -17,18 +18,42 @@ import javax.net.ssl.SSLHandshakeException;
 public class Spider {
 
     private static AdjList<Page> webGraph;
-    private static int numSearchLevel = 0;
-    private static final int MAX_LEVEL_SEARCH = 10; // Sets how far Deep algorithm will seach
-    private static final int MAX_PAGE_PER_SEARCH = 100;//Limits the number of pages per level
-    private URL seedURL;
+    private static final int MAX_LEVEL_SEARCH = 5; // Sets how far Deep algorithm will search
+    private static final int MAX_PAGE_PER_SEARCH = 50;//Limits the number of pages per level
 
-    Spider(String url) throws MalformedURLException {
-        seedURL = new URL(url); //stores seed Url
+    Spider(){
         webGraph = new AdjList<>(); // DTS
     }
 
-    void searchInternet(String KeyWord) throws IOException {
-        webCrawler(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
+    //Search each seed link for the keyword
+    public void searchInternet(Collection<String> list,String KeyWord) throws IOException{
+        for (String str : list) {
+           URL seedURL = new URL(str);
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        webCrawler(seedURL, KeyWord); // calls method BFS using seed URL.
+//                    } catch (IOException e) {
+//                        System.err.println("IOException when creating Thread for link: "+seedURL.toString());
+//                    }
+//                }
+//            });
+            webCrawler(seedURL, KeyWord); // calls method BFS using seed URL.
+
+        }
+
+    }
+
+    /**
+     * Search the seed link for a key word
+     * @param seed
+     * @param KeyWord
+     * @throws IOException
+     */
+    public void searchInternet(String seed, String KeyWord) throws IOException {
+       URL  seedURL = new URL(seed);
+       webCrawler(seedURL, KeyWord); // calls method BFS using seed URL.
     }
 
     /**
@@ -41,6 +66,8 @@ public class Spider {
      */
     private void webCrawler(URL startUrl, String KeyWord) throws IOException {
 
+        int numSearchLevel = 0;// ensure this variable is 0
+
          Page firstPage = new Page(startUrl,numSearchLevel);//first vertex stored as Page object
         // create list to hold vertices as they are encountered
         List<URL> visitedLinks = new LinkedList<>();
@@ -52,7 +79,6 @@ public class Spider {
         webGraph.addVertex(firstPage); // add first vertex to the graph
         URL currentLink = firstPage.getUrl();
 
-        numSearchLevel = 0;// ensure this variable is 0
         // repeatedly find adjacent vertices and visit them. Stops when reachs MAX_LEVEL_SEARCH.
         while (!processingQueue.isEmpty()
                 && (numSearchLevel <= MAX_LEVEL_SEARCH)) {
@@ -89,11 +115,11 @@ public class Spider {
                     numOfPages++;//increase number of pages per level.
                 }
             } catch (SSLHandshakeException e) {
-                System.err.println("Exception caught for link. Access denied. " + currentLink);
+                System.err.println("Exception caught at webCrawler for link. Access denied. " + currentLink);
             } catch (MalformedURLException e) {
-                System.err.println("Protocol not valid for " + currentLink);
+                System.err.println("At webCrawler caught Protocol not valid for " + currentLink);
             } catch (IOException e) {
-                System.err.println("I/O Exception in " + currentLink);
+                System.err.println("At webCrawler caught I/O Exception in " + currentLink);
             }
             numSearchLevel++;//increase level of search
         }
@@ -137,7 +163,7 @@ public class Spider {
      * Create a adjancy Matrix from the graph. Calculates the Pagerank of each page.
      * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
-    Queue<Page> orderPagesByRank() {
+    public Queue<Page> orderPagesByRank() {
         Double[][] pageRank = MatrixMain.pageRank(webGraph.createAM(),0.15);
         List<Page> list = webGraph.getOrderedList();
         Comparator<Page> comparator = (o1, o2) -> {
@@ -175,7 +201,7 @@ public class Spider {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("printToFile method failed. Unable to create File");
         }
         outputStream.close();
     }
@@ -213,22 +239,37 @@ public class Spider {
         return str;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+
+        Spider spider = new Spider();
 
         //This part allows fast test without user input
-        String aut = "http://url.ac.nz";//String
+        String AUT = "https://aut.ac.nz";//String
         String jsoup = "https://jsoup.org";
-        String fb = "https://www.facebook.com/";
+        String StackOF="https://stackoverflow.com/";
+        String KeyWord = "Java";
 
-        Spider spider = new Spider(jsoup);
-        spider.searchInternet("Java");
-        System.out.println(spider.printFromAdjList());
-        System.out.println();
-        System.out.println("Printing Webpages based on its page rank value");
-        System.out.println(spider.printFromOrderedList());
+        //Creates a list of seeds Links
+        ArrayList<String> links = new ArrayList();
+        links.add(AUT);
+        links.add(jsoup);
+        links.add(StackOF);
 
 
-        //Menu created for user input, but commented out due to GUI implementation
+//       //Test
+        try {
+            spider.searchInternet(links, KeyWord);
+            System.out.println(spider.printFromAdjList());
+            System.out.println();
+            System.out.println("Printing Webpages based on its page rank value");
+            System.out.println(spider.printFromOrderedList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("test");
+        }
+
+
+//        Menu created for user input, but commented out due to GUI implementation
 //        Scanner scan = new Scanner(System.in);
 //        boolean incorrectForm = true;
 //        String inputUrl = "";
@@ -253,10 +294,10 @@ public class Spider {
 //        System.out.print("2.What are we seaching?(String or single word)\n>");
 //        Keyword = scan.nextLine();
 //        System.out.println("Please wait while search is performed");
-//        Spider spider = new Spider(inputUrl);
-//        spider.searchInternet(Keyword);
+//        spider.searchInternet(inputUrl,Keyword);
 //        spider.printFromAdjList();
-
+//        System.out.println("Printing Webpages based on its page rank value");
+//        System.out.println(spider.printFromOrderedList());
 
 
 
