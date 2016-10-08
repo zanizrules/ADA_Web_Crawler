@@ -1,7 +1,10 @@
 
 import org.jsoup.select.Elements;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -94,6 +97,8 @@ public class Spider {
             }
             numSearchLevel++;//increase level of search
         }
+        //Save list to a file
+        printToFile(webGraph.getOrderedList(),"unOrderedListOfLinks");
     }
 
     /**
@@ -151,7 +156,28 @@ public class Spider {
             orderedQueue.add(page);
             counter++;
         }
+        //Save list to a file
+        printToFile(orderedQueue,"orderedList");
         return orderedQueue;
+    }
+
+    /**
+     * Class will print a list of Pages' URL to a file of certain given name
+     * @param list
+     * @param filename
+     */
+    private void printToFile( Collection<Page>list,String filename){
+        PrintWriter outputStream = null;
+        try {
+            outputStream = new PrintWriter(new FileOutputStream(filename+".txt"));
+            for (Page page : list ) {
+                outputStream.println(page.getUrl().toString());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        outputStream.close();
     }
 
     /**
@@ -190,10 +216,12 @@ public class Spider {
     public static void main(String[] args) throws IOException {
 
         //This part allows fast test without user input
-        String aut = "http://aut.ac.nz";
-        //String jsoup = "https://jsoup.org";
-        Spider spider = new Spider(aut);
-        spider.searchInternet("Students");
+        String aut = "http://url.ac.nz";//String
+        String jsoup = "https://jsoup.org";
+        String fb = "https://www.facebook.com/";
+
+        Spider spider = new Spider(jsoup);
+        spider.searchInternet("Java");
         System.out.println(spider.printFromAdjList());
         System.out.println();
         System.out.println("Printing Webpages based on its page rank value");
