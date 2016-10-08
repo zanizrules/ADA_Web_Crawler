@@ -12,14 +12,24 @@ import java.io.IOException;
  * GUI Class created for Web Crawler.
  */
 public class WebCrawlerGui extends JPanel implements ActionListener {
-    private final static int PANEL_WIDTH = 400; // size of panel
-    private final static int PANEL_HEIGHT = 400;
+    private final static int PANEL_WIDTH = 450; // size of panel
+    private final static int PANEL_HEIGHT = 450;
 
     private static JFrame frame;
-    private JLabel label, inputUrlLabel, inputKeywordLabel;
-    private JTextArea urlText, keywordText;
-    private JButton searchButton;
-    private BufferedImage img;
+    private static final JLabel label = new JLabel("Vini & Shane Web Crawler"),
+            inputUrlLabel = new JLabel("Please enter a URL below:"),
+            inputKeywordLabel = new JLabel("Please enter a search term below:");
+
+    private static JTextArea urlText, keywordText;
+    private JButton searchButton, randomInputButton;
+    private SearchResultsGui searchResultsScreen;
+
+    public String getUrlText() {
+        return urlText.getText();
+    }
+    public String getKeywordText() {
+        return keywordText.getText();
+    }
 
     private WebCrawlerGui() {
         super(new BorderLayout());
@@ -32,12 +42,12 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         keywordText.setPreferredSize(new Dimension(PANEL_WIDTH - 30, 22));
         keywordText.setBorder(BorderFactory.createEtchedBorder(1));
 
-        label = new JLabel("Vini & Shane Web Crawler");
+
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font(label.getName(), Font.BOLD, 28));
 
         try {
-            img = ImageIO.read(new File("src/webImg.png"));
+            BufferedImage img = ImageIO.read(new File("src/webImg.png"));
             JLabel picLabel = new JLabel(new ImageIcon(img));
             add(picLabel);
 
@@ -45,27 +55,27 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        inputUrlLabel = new JLabel("Please enter a URL below:");
-        inputKeywordLabel = new JLabel("Please enter a search term below:");
-
         searchButton = new JButton("Search");
         searchButton.addActionListener(this);
+        randomInputButton = new JButton("Generate Random Search");
+        randomInputButton.addActionListener(this);
 
         add(label, BorderLayout.NORTH);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 140));
-        buttonPanel.add(inputUrlLabel, BorderLayout.NORTH);
-        buttonPanel.add(urlText, BorderLayout.NORTH);
-        buttonPanel.add(inputKeywordLabel, BorderLayout.CENTER);
-        buttonPanel.add(keywordText, BorderLayout.CENTER);
-        buttonPanel.add(searchButton, BorderLayout.SOUTH);
+        buttonPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 170));
+        buttonPanel.add(randomInputButton); // TODO: fix
+        buttonPanel.add(inputUrlLabel);
+        buttonPanel.add(urlText);
+        buttonPanel.add(inputKeywordLabel);
+        buttonPanel.add(keywordText);
+        buttonPanel.add(searchButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
     }
 
     public static void initialiseFrame(WebCrawlerGui i) {
-        if(frame == null) {
+        if (frame == null) {
             frame = new JFrame("Web Crawler Gui");
             frame.setSize(PANEL_WIDTH, PANEL_HEIGHT);
             frame.setFocusable(true);
@@ -103,10 +113,17 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
                     // Tell user they have not given a search term
                     JOptionPane.showMessageDialog(this, "Please enter a Search Term", "Error Occurred", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    //happy scenario
-
+                    setVisible(false);
+                    if (searchResultsScreen == null) {
+                        searchResultsScreen = new SearchResultsGui(this);
+                    }
+                    searchResultsScreen.initialiseFrame();
                 }
             }
+        } else if (source.equals(randomInputButton)) {
+            // add random here
+            urlText.setText("http://aut.ac.nz");
+            keywordText.setText("Students");
         }
     }
 }

@@ -19,12 +19,12 @@ public class Spider {
     private static final int MAX_PAGE_PER_SEARCH = 100;//Limits the number of pages per level
     private URL seedURL;
 
-    private Spider(String url) throws MalformedURLException {
+    Spider(String url) throws MalformedURLException {
         seedURL = new URL(url); //stores seed Url
         webGraph = new AdjList<>(); // DTS
     }
 
-    private void searchInternet(String KeyWord) throws IOException {
+    void searchInternet(String KeyWord) throws IOException {
         webCrawler(seedURL, KeyWord); // calls method BFS using seed URL. Only by preference purpose
     }
 
@@ -132,7 +132,7 @@ public class Spider {
      * Create a adjancy Matrix from the graph. Calculates the Pagerank of each page.
      * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
-    private Queue<Page> orderPagesByRank() {
+    Queue<Page> orderPagesByRank() {
         Double[][] pageRank = MatrixMain.pageRank(webGraph.createAM(),0.15);
         List<Page> list = webGraph.getOrderedList();
         Comparator<Page> comparator = (o1, o2) -> {

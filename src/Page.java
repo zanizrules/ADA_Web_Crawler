@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.net.URL;
 
 /**
@@ -20,6 +19,7 @@ class Page implements Comparable<Page> {
     Page(URL url, int searchLevel) {
         this.url = url;
         this.searchLevel = searchLevel;
+        pageRank = 0d;
     }
 
     URL getUrl() {
@@ -38,15 +38,11 @@ class Page implements Comparable<Page> {
         this.pageRank = pageRank;
     }
 
-    public String toString() {
-        return url.toString();
-    }
 
-    public JLabel getLabel() { // 70, 40, 15
-        JLabel result = new JLabel("<html>&#8195;<a style=\"font-size: large;\" href=\""+url.toString()+"\">Test Title</a>" +
+    public String toString() {
+        return ("<html>&#8195;<a style=\"font-size: large;\" href=\""+url.toString()+"\">"+ url.getHost() +"</a>" +
                 "<p style=\"color: green; padding: 0 0 0 20px;\">" + url.toString() + "</p>" +
-                "<p style=\"color: gray; padding: 0 0 0 20px;\">" + "Test Description..." + "</p></html>");
-        return result;
+                "<p style=\"color: gray; padding: 0 0 0 20px;\">" + "test description" + "</p></html>");
     }
 
     @Override
