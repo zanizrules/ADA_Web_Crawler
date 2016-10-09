@@ -40,7 +40,7 @@ public class ShanesPageRank {
 
         while(bigChange){
             prevVec = pageRankVector;
-            pageRankVector = PowerIteration.multiplySquareMatbyVec(pageRankMatrix, pageRankVector);
+          //  pageRankVector = PowerIteration.multiplySquareMatbyVec(pageRankMatrix, pageRankVector);
             bigChange = false;
             for(int i = 0; i < pageRankVector.length; i++) {
                 if((prevVec[i].subtract(pageRankVector[i])).abs().compareTo(difference) == 1) {
@@ -81,7 +81,7 @@ public class ShanesPageRank {
         graph[3][0] = BigDecimal.ONE;
 
         BigDecimal[] centrality = pageRank(graph);
-        PowerIteration.printVector(centrality);
+       // PowerIteration.printVector(centrality);
 
         // Lab Q3
         System.out.println("\nPage Rank Centrality on graph from lab: ");
@@ -102,7 +102,7 @@ public class ShanesPageRank {
         graph2[4][3] = BigDecimal.ONE;
 
         centrality = pageRank(graph2);
-        PowerIteration.printVector(centrality);
+      //  PowerIteration.printVector(centrality);
 
         // Lab 08 Q3
         System.out.println("\nPage Rank Centrality on graph from lab 8: ");
@@ -118,7 +118,7 @@ public class ShanesPageRank {
         graph3[2][0] = BigDecimal.ONE;
 
         centrality = pageRank(graph3);
-        PowerIteration.printVector(centrality);
+      //  PowerIteration.printVector(centrality);
 
     }
 }
