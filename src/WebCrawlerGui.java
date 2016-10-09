@@ -153,7 +153,7 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
                 urlText.setText("https://www.facebook.com/");
                 keywordText.setText("Like");
             } else {
-                urlText.setText("https://stackoverflow.com/");
+                urlText.setText("http://stackoverflow.com/");
                 keywordText.setText("Java");
             }
         }

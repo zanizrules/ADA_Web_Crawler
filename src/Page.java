@@ -34,7 +34,7 @@ class Page {
         this.pageRank = pageRank;
     }
 
-    /*
+    /**
         toString method which returns a representation of a web-page to be shown in the GUI.
         String is edited with html to get a visually appealing output.
      */

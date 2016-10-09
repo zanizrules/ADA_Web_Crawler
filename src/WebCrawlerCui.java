@@ -13,9 +13,9 @@ public class WebCrawlerCui {
         Spider spider = new Spider();
 
         // Set the Web pages here
-        String AUT = "https://aut.ac.nz";
+        String AUT = "http://aut.ac.nz";
         String jSoup = "https://jsoup.org";
-        String StackOF = "https://stackoverflow.com/";
+        String StackOF = "http://stackoverflow.com/";
 
         //Please set the keyword here
         String KeyWord = "Java";

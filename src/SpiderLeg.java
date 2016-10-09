@@ -36,7 +36,7 @@ public class SpiderLeg {
     }
 
     /**
-     * * Returns a string found in the Description parameter of the HTML file for the given URL.
+     * Returns a string found in the Description parameter of the HTML file for the given URL.
      */
     static String getDescriptionFromPage(String url) throws IOException {
         Document doc = Jsoup.connect(url).userAgent(connection).get();
