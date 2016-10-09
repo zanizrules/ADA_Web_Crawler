@@ -1,6 +1,13 @@
 
 import java.util.*;
 
+/**
+ * Class Graph is used to store vertices and edges, in other words it stores the page and its links to other vertices.
+ * A map is used to represent an adjacency list where the key is vertex type E and its value is
+ * list of vertices to which the key is linked to. An ArrayList is used to maintain an ordered list sequentially as
+ * vertices are added.
+ * @param <E>
+ */
 class Graph<E> {
     /*
         TODO: Go through this class with Vini.
@@ -9,8 +16,8 @@ class Graph<E> {
             - Rename variables, edge set and node/vertex set?
             - Refactor through the code.
      */
-    private ArrayList<E> orderedList;
-    private Map<E, List<E>> adjacency_list;
+    private ArrayList<E> orderedList; // maintain the vertices order
+    private Map<E, List<E>> adjacency_list;//stores vertices and their edges
 
     Graph() {
         adjacency_list = new HashMap<>();
@@ -49,6 +56,13 @@ class Graph<E> {
         return orderedList;
     }
 
+    /**
+     * Creates an adjacency matrix representation for the graph class.
+     * 0 represents non-existent path and 1 if there is a link between vertices.
+     * A 2 dimension array is used so further manipulation can be performed on the matrix's value
+     * easily by other methods.
+     * @return Double[][]
+     */
     Double[][] createAdjacencyMatrix() {
         int size = this.orderedList.size();
         Double[][] ajcMatrix = new Double[size][size];

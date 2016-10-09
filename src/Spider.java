@@ -11,12 +11,16 @@ import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
- * TODO: Refactoring, commenting -> Will get Vini to explain, and I translate anything not obvious into comments.
- * @author Everybody's
+ * Spider Class stores a graph of pages type Graph which will be populated when a search is performed.
+ * Spider is responsible for exploring the internet from different seeds or a specific seed. A key word must be
+ * provided such that it will narrow down the number of links by matching the keyword on each pages' meta data.
+ * Spider holds variables to set the max level of search as well as the maximum pages that will be explored for each level.
+ * 2 files are created, one called unOrderedListOfLinks when a search is performed which records the order in
+ * which links were found and a second one called ordereList that records the links by their pageRank value.
  */
 public class Spider {
 
-    private static Graph<Page> webGraph;
+    private static Graph<Page> webGraph; // graph
     private static final int MAX_LEVEL_SEARCH = 10; // Sets how far Deep algorithm will search
     private static final int MAX_PAGE_PER_SEARCH = 50;//Limits the number of pages per level
 
@@ -25,10 +29,10 @@ public class Spider {
     }
 
     /**
-     * Search each seed link for the keyword
-     * @param list
-     * @param KeyWord
-     * @throws IOException
+     * Receives a list of seeds links type string. Search each seed link for the keyword
+     * @param list Collection<String>
+     * @param KeyWord String
+     * @throws IOException Exception
      */
     public void searchInternet(Collection<String> list,String KeyWord) throws IOException{
         for (String str : list) {
@@ -52,9 +56,9 @@ public class Spider {
 
     /**
      * Search the seed link for a key word
-     * @param seed
-     * @param KeyWord
-     * @throws IOException
+     * @param seed String
+     * @param KeyWord String
+     * @throws IOException Exception
      */
     public void searchInternet(String seed, String KeyWord) throws IOException {
        URL  seedURL = new URL(seed);
@@ -62,18 +66,17 @@ public class Spider {
     }
 
     /**
-     * BFS - searchs the internet for a keyword storing the relevant webPages. Edges are also stored.
+     * Method searches the internet for a keyword storing the relevant webPages. Edges are also stored.
      * Accepts  a startURL where it starts the search from. Accepts a keyWord which will be the condition
-     * to add websites to the graph.
+     * to add websites to the graph. Uses BFS as its foundation.
      * @param startUrl starting URL
      * @param KeyWord keyword to search
      * @throws IOException Input/output exception.
      */
     private void webCrawler(URL startUrl, String KeyWord) throws IOException {
-
         int numSearchLevel = 0;// ensure this variable is 0
 
-         Page firstPage = new Page(startUrl,numSearchLevel);//first vertex stored as Page object
+        Page firstPage = new Page(startUrl,numSearchLevel);//first vertex stored as Page object
         // create list to hold vertices as they are encountered
         List<URL> visitedLinks = new LinkedList<>();
         visitedLinks.add(firstPage.getUrl());// handle the starting vertex
@@ -82,7 +85,7 @@ public class Spider {
         processingQueue.addLast(firstPage);// handle the starting vertex
 
         webGraph.addVertex(firstPage); // add first vertex to the graph
-        URL currentLink = firstPage.getUrl();
+        URL currentLink = firstPage.getUrl(); // variable stores the current link for reference in case exception is throw
 
         // repeatedly find adjacent vertices and visit them. Stops when reachs MAX_LEVEL_SEARCH.
         while (!processingQueue.isEmpty()
@@ -94,14 +97,14 @@ public class Spider {
                 //get all hyperlinks that frontLink contains
                 List<URL> hyperlinks = SpiderLeg.getHyperlink(frontLink.getUrl().toString());
                 Iterator<URL> iterator = hyperlinks.iterator(); // gets iterator
-                int numOfPages = 0;
+                int numOfPages = 0; //reset number of max allow pages per level
                 while (iterator.hasNext() && numOfPages < MAX_PAGE_PER_SEARCH) {
                     URL nextLink = iterator.next(); // gets first element
                     currentLink = nextLink;//set current link in case of exception is thrown
-                    //checj if link has been visited. if not set as visited
+                    //check if link has been visited. if not set as visited
                     if (!visitedLinks.contains(nextLink)) {
                         visitedLinks.add(nextLink);//addd to visited
-                        //seach keyword has been found
+                        //search keyword has been found
                         if(findKeyWord(nextLink,KeyWord)) {
                             Page child = new Page(nextLink,numSearchLevel+1); //creates Page object for new link
                             processingQueue.addLast(child);//add new page to the queue to be processed
@@ -133,7 +136,7 @@ public class Spider {
     }
 
     /**
-     * Return a existent Page from the graph
+     * Find and return an existent Page from the graph
      * @param url Page URL
      * @return Page
      */
@@ -149,7 +152,9 @@ public class Spider {
         }
 
     /**
-     * Find the keyWord in the metadata of given url
+     * Find the keyWord in the metadata of given url.
+     * This method throws and catch IOException often as it requires access to external pages
+     * and client connection may time out.
      */
     private  boolean findKeyWord(URL url,String keyword) {
         boolean found = false;
@@ -166,8 +171,8 @@ public class Spider {
 
     /**
      * Class will print a list of Pages' URL to a file of certain given name
-     * @param list
-     * @param filename
+     * @param list Collection<Page>list
+     * @param filename String
      */
     private void printToFile( Collection<Page>list,String filename){
         PrintWriter outputStream = null;
@@ -188,23 +193,15 @@ public class Spider {
      * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
     public Queue<Page> orderPagesByRank() {
+        //Create a Page rank Matrix for this graph
         Double[][] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(),0.15);
-        List<Page> list = webGraph.getOrderedList();
-        Comparator<Page> comparator = (o1, o2) -> {
-            if(o1.getPageRank() > o2.getPageRank()){
-                return -1;
-            }
-            if (o1.getPageRank() < o2.getPageRank()){
-                return 1;
-            }
-            return 0;
-
-        };
-        PriorityQueue<Page> orderedQueue = new PriorityQueue<>(list.size(),comparator);
-        int counter = 0;
+        List<Page> list = webGraph.getOrderedList(); //get OrderList from graph so page rank can be stored accordingly
+        //Create a priority queue based on list size, get comparator from Page class for ordering
+        PriorityQueue<Page> orderedQueue = new PriorityQueue<>(list.size(),Page.getComparator());
+        int counter = 0;//Recordsposition(vertex) in the pageRank matrix
         for (Page page: list ) {
-            page.setPageRank(pageRank[counter][0]);
-            orderedQueue.add(page);
+            page.setPageRank(pageRank[counter][0]);//Stores page rank value to the page.
+            orderedQueue.add(page);//add page to the Priority queue in decreasing order
             counter++;
         }
         //Save list to a file
@@ -213,7 +210,7 @@ public class Spider {
     }
 
     /**
-     * Print vertex(Pages) and their edges. Return string
+     * Print vertex(Pages) and their edges. Return a string
      * Not use for the GUI only CUI
      */
     public String printFromAdjList() {
@@ -234,7 +231,7 @@ public class Spider {
     }
 
     /**
-     *  Print Pages from the orderQueue by page Rank factor
+     *  Print Pages from the orderQueue by page Rank factor in decreasing order
      *  Not use for the GUI only CUI
      */
     public String printFromOrderedList(){

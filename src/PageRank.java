@@ -1,14 +1,14 @@
 /**
- * Class resposible for calculating the Page Rank value for each page
+ * PageRank Class is responsible for calculating the Page Rank value for each page
  * it has private methods to multiply matrices, transpose matrices and calculate centrality values.
  */
 class PageRank {
 
     /**
      * Calculates two matrices and return the results
-     * @param A
-     * @param B
-     * @return
+     * @param A Double[][]
+     * @param B Double[][]
+     * @return Double[][]
      */
     private static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
 
@@ -41,9 +41,9 @@ class PageRank {
 
     /**
      * Calculates values for each edge and return a PageRank Matrix
-     * @param aM
-     * @param df
-     * @return
+     * @param aM Double[][]
+     * @param df Double[][]
+     * @return Double[][]
      */
     private static Double[][] pageRankMatrix(Double[][] aM, double df) {
         int size = aM.length;
@@ -71,8 +71,8 @@ class PageRank {
 
     /**
      * Method transpose a matrix only
-     * @param aM
-     * @return
+     * @param aM Double[][]
+     * @return Double[][]
      */
     private static Double[][] transpose(Double[][] aM) {
         int size = aM.length;
@@ -88,9 +88,9 @@ class PageRank {
     /**
      * Simulate the stochastic process by iteratively multiplying the stochastic matrix to the current vector.
      * Returns an array of vectors value corresponding to each page.
-     * @param aM
-     * @param df
-     * @return
+     * @param aM Double[][]
+     * @param df Double[][]
+     * @return Double[][]
      */
     static Double[][] pageRank(Double[][] aM, double df) {
         Double[][] pageRankMatrix = pageRankMatrix(aM, df);

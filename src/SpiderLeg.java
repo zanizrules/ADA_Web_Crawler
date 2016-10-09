@@ -9,18 +9,19 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *   This class is resposible to get a information fof HTML files from  given URLs.
+ *   SpiderLeg class is responsible to get a information fof HTML files from  given URLs.
  *   Such information are Meta date; Title; Description; KeyWords; Hyperlinks; ImageLinks
  *   Also have private printing methods for testing purpose only
+ *   There is a main method which will test all methods, it was created to satisfy question one printing purpose only.
  */
 public class SpiderLeg {
 
     /**
      * Return a List of Elements ( Type Elements provided by Jsoup class) found in the metaData parameter
      * of the HTML filefrom  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param  url String
+     * @return Elements
+     * @throws IOException Exception
      */
     static Elements getMeta(String url) throws IOException{
         Document doc = Jsoup.connect(url).
@@ -32,9 +33,9 @@ public class SpiderLeg {
     /**
      * Return a string found in the Title parameter
      * of the HTML filefrom  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url String
+     * @return String
+     * @throws IOException Exception
      */
     public static String getTitle(String url) throws IOException {
         Document doc = Jsoup.connect(url).
@@ -45,9 +46,9 @@ public class SpiderLeg {
 
     /**
      ** Return a string found in the Description parameter of the HTML file from  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url String
+     * @return String
+     * @throws IOException Exception
      */
     public static String getDescriptionFromPage(String url) throws IOException {
         Document doc = Jsoup.connect(url).
@@ -64,9 +65,9 @@ public class SpiderLeg {
 
     /**
      * Return a string found in the key words parameter of the HTML file from  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url String
+     * @return String
+     * @throws IOException Exception
      */
     public static String getKeywordsfromPage(String url) throws IOException {
 
@@ -87,9 +88,9 @@ public class SpiderLeg {
     /**
      * Return a List of absoluteLinks ( Type Elements provided by Jsoup class) found in the a[href] parameter
      * of the HTML filefrom  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url String
+     * @return ArrayList<URL>
+     * @throws IOException Exception
      */
     static ArrayList<URL> getHyperlink(String url) throws IOException {
         Document doc = Jsoup.connect(url).
@@ -110,9 +111,9 @@ public class SpiderLeg {
     /**
      * Return a List of the images' Links ( Type Elements provided by Jsoup class) found in the img parameter
      * of the HTML filefrom  given URL.
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url String
+     * @return Elements
+     * @throws IOException Exception
      */
     public static Elements getImages(String url) throws IOException {
         Document doc = Jsoup.connect(url).

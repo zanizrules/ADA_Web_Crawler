@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Shane Birdsall on 27/09/2016.
  * GUI Class created for Web Crawler.
  */
 public class WebCrawlerGui extends JPanel implements ActionListener {

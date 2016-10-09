@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.util.*;
 
-/**
- * Created by Shane Birdsall on 8/10/2016.
- */
 public class SearchResults extends LinkedList<Page> {
     private SearchResultListModel listModel;
     private LinkedList<Page> searchResults;
