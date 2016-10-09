@@ -19,8 +19,8 @@ import javax.net.ssl.SSLHandshakeException;
  */
 class Spider {
     private static Graph<Page> webGraph;
-    private static final int MAX_LEVEL_SEARCH = 5; // Sets how deep the algorithm will search
-    private static final int MAX_PAGE_PER_SEARCH = 50; // Limits the number of pages per level
+    private static final int MAX_LEVEL_SEARCH = 10; // Sets how deep the algorithm will search
+    private static final int MAX_PAGE_PER_SEARCH = 100; // Limits the number of pages per level
 
     Spider() {
         webGraph = new Graph<>(); // DTS

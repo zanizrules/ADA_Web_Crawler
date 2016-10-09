@@ -13,18 +13,20 @@ public class WebCrawlerCui {
         Spider spider = new Spider();
 
         // Set the Web pages here
-        String AUT = "http://aut.ac.nz";
+        String aut = "http://aut.ac.nz";
         String jSoup = "https://jsoup.org";
-        String StackOF = "http://stackoverflow.com/";
+        String stackoverflow = "http://stackoverflow.com/";
+        String fB = "https://www.facebook.com/";
 
         //Please set the keyword here
         String KeyWord = "Java";
 
         // Creates a list of seed Links
         ArrayList<String> links = new ArrayList<>();
-        links.add(AUT);
+        links.add(aut);
         links.add(jSoup);
-        links.add(StackOF);
+        links.add(stackoverflow);
+        links.add(fB);
 
         // Test multiple seeds, perform search and print result
         try {
