@@ -1,22 +1,30 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * WebCrawlerCui implements a main class for the Cui version. This class has been hard coded to facilitate testing.
+ * The current set up will search a keyWord from different seeds. Searching from different seeds are not available in the
+ * Gui version. Menu for user input has been commented out due to Gui implementation.
+ */
 public class WebCrawlerCui {
 
     public static void main(String[] args) {
         Spider spider = new Spider();
-        //This part allows fast test without user input
+
+        //Please set the Web pages here
         String AUT = "https://aut.ac.nz";//String
         String jsoup = "https://jsoup.org";
         String StackOF="https://stackoverflow.com/";
+        //Please set the keyword here
         String KeyWord = "Java";
+
         //Creates a list of seeds Links
         ArrayList<String> links = new ArrayList();
         links.add(AUT);
         links.add(jsoup);
         links.add(StackOF);
 
-//      //Test multiple seeds
+//      //Test multiple seeds, perform search and print result
         try {
             spider.searchInternet(links, KeyWord);
             System.out.println(spider.printFromAdjList());
@@ -25,7 +33,6 @@ public class WebCrawlerCui {
             System.out.println(spider.printFromOrderedList());
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("test");
         }
 
 
