@@ -1,23 +1,14 @@
-
 import java.util.*;
 
 /**
- * Class Graph is used to store vertices and edges, in other words it stores the page and its links to other vertices.
- * A map is used to represent an adjacency list where the key is vertex type E and its value is
- * list of vertices to which the key is linked to. An ArrayList is used to maintain an ordered list sequentially as
- * vertices are added.
- * @param <E>
+ * The Graph Class is used to store vertices and edges, in other words it stores web-pages and their links to other
+ * web-pages. A map is used to represent an adjacency list where the key is vertex type E and its value is a list of
+ * vertices to which the key is linked to. An ArrayList is used to maintain an ordered list sequentially as vertices
+ * are added.
  */
 class Graph<E> {
-    /*
-        TODO: Go through this class with Vini.
-        I am wanting to:
-            - change the name of this class to perhaps Graph.
-            - Rename variables, edge set and node/vertex set?
-            - Refactor through the code.
-     */
-    private ArrayList<E> orderedList; // maintain the vertices order
-    private Map<E, List<E>> adjacency_list;//stores vertices and their edges
+    private ArrayList<E> orderedList; // Maintain the vertices order
+    private Map<E, List<E>> adjacency_list; // Store vertices and their edges
 
     Graph() {
         adjacency_list = new HashMap<>();
@@ -28,8 +19,7 @@ class Graph<E> {
         if (adjacency_list.containsKey(vertex)) {
             return;
         }
-        List<E> list = new LinkedList<>();
-        adjacency_list.put(vertex, list);
+        adjacency_list.put(vertex, new LinkedList<>());
         orderedList.add(vertex);
     }
 
@@ -52,16 +42,14 @@ class Graph<E> {
         return adjacency_list.keySet().iterator();
     }
 
-    List<E> getOrderedList(){
+    List<E> getOrderedList() {
         return orderedList;
     }
 
     /**
-     * Creates an adjacency matrix representation for the graph class.
-     * 0 represents non-existent path and 1 if there is a link between vertices.
-     * A 2 dimension array is used so further manipulation can be performed on the matrix's value
-     * easily by other methods.
-     * @return Double[][]
+     * Creates and returns an adjacency matrix representation of the Graph.
+     * 0 represents a non-existent path and 1 represents a link between vertices.
+     * A 2D array(matrix representation) is needed for calculating page rank easily in other methods.
      */
     Double[][] createAdjacencyMatrix() {
         int size = this.orderedList.size();
@@ -81,9 +69,6 @@ class Graph<E> {
             }
             counter++;
         }
-
         return ajcMatrix;
     }
-
-
 }

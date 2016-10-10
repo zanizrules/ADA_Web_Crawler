@@ -23,10 +23,11 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
     private JButton searchButton, randomInputButton;
     private SearchResultsGui searchResultsScreen;
 
-    public String getUrlText() {
+    String getUrlText() {
         return urlText.getText();
     }
-    public String getKeywordText() {
+
+    String getKeywordText() {
         return keywordText.getText();
     }
 
@@ -41,7 +42,6 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         keywordText.setPreferredSize(new Dimension(PANEL_WIDTH - 30, 22));
         keywordText.setBorder(BorderFactory.createEtchedBorder(1));
 
-
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font(label.getName(), Font.BOLD, 28));
 
@@ -49,7 +49,6 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
             BufferedImage img = ImageIO.read(new File("src/webImg.png"));
             JLabel picLabel = new JLabel(new ImageIcon(img));
             add(picLabel);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,21 +69,20 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         buttonPanel.add(keywordText);
         buttonPanel.add(searchButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
     }
 
-    public static void initialiseFrame(WebCrawlerGui i) {
+    private static void initialiseFrame(WebCrawlerGui i) {
         if (frame == null) {
             frame = new JFrame("Web Crawler Gui");
             frame.setSize(PANEL_WIDTH, PANEL_HEIGHT);
             frame.setFocusable(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setResizable(false);
             frame.getContentPane().add(i);
         }
     }
 
-    public void makeVisible() {
+    void makeVisible() {
         frame.setVisible(true);
     }
 
@@ -92,13 +90,13 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         WebCrawlerGui gui = new WebCrawlerGui();
         initialiseFrame(gui);
 
-        //gets the dimensions for screen width and height to calculate center
+        // gets the dimensions for screen width and height to calculate center
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dimension = toolkit.getScreenSize();
         int screenHeight = dimension.height;
         int screenWidth = dimension.width;
-        frame.pack(); //resize frame appropriately for its content
-        //positions frame in center of screen
+        frame.pack(); // resize frame appropriately for its content
+        // positions frame in center of screen
         frame.setLocation(new Point((screenWidth / 2) - (frame.getWidth() / 2),
                 (screenHeight / 2) - (frame.getHeight() / 2)));
         frame.setVisible(true);

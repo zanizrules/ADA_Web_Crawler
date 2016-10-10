@@ -1,14 +1,11 @@
 /**
- * PageRank Class is responsible for calculating the Page Rank value for each page
- * it has private methods to multiply matrices, transpose matrices and calculate centrality values.
+ * The PageRank Class is responsible for calculating the Page Rank value for a web-page.
+ * The class has functionality to multiply matrices, transpose matrices and calculate centrality values.
  */
 class PageRank {
 
     /**
-     * Calculates two matrices and return the results
-     * @param A Double[][]
-     * @param B Double[][]
-     * @return Double[][]
+     * Multiplies Matrix A by Matrix B and returns the result (Matrix C).
      */
     private static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
 
@@ -24,7 +21,7 @@ class PageRank {
         Double[][] C = new Double[aRows][bColumns];
         for (int i = 0; i < aRows; i++) {
             for (int j = 0; j < bColumns; j++) {
-                C[i][j] = 0.00000;
+                C[i][j] = 0d;
             }
         }
 
@@ -35,29 +32,25 @@ class PageRank {
                 }
             }
         }
-
         return C;
     }
 
     /**
-     * Calculates values for each edge and return a PageRank Matrix
-     * @param aM Double[][]
-     * @param df Double[][]
-     * @return Double[][]
+     * Calculates the PageRank Matrix for a given graph aM.
      */
     private static Double[][] pageRankMatrix(Double[][] aM, double df) {
-        int size = aM.length;
+        int size = aM.length, outgoing;
         for (int i = 0; i < size; i++) {
-            int outgoing = 0;
+            outgoing = 0;
             for (int j = 0; j < size; j++) {
                 if (aM[i][j] == 1) {
                     outgoing++;
                 }
             }
             for (int k = 0; k < size; k++) {
-                if(outgoing == 0){
-                    aM[i][k] = (double) 1/ size;
-                }else{
+                if (outgoing == 0) {
+                    aM[i][k] = (double) 1 / size;
+                } else {
                     if (aM[i][k] == 1) {
                         aM[i][k] = ((1 - (df)) / size) + (df / outgoing);
                     } else {
@@ -70,9 +63,7 @@ class PageRank {
     }
 
     /**
-     * Method transpose a matrix only
-     * @param aM Double[][]
-     * @return Double[][]
+     * Returns the transpose of the given matrix aM
      */
     private static Double[][] transpose(Double[][] aM) {
         int size = aM.length;
@@ -88,9 +79,6 @@ class PageRank {
     /**
      * Simulate the stochastic process by iteratively multiplying the stochastic matrix to the current vector.
      * Returns an array of vectors value corresponding to each page.
-     * @param aM Double[][]
-     * @param df Double[][]
-     * @return Double[][]
      */
     static Double[][] pageRank(Double[][] aM, double df) {
         Double[][] pageRankMatrix = pageRankMatrix(aM, df);
@@ -100,18 +88,18 @@ class PageRank {
             vector[i][0] = (double) 1 / pageRankMatrix.length;
         }
         boolean changing = true;
+        Double[][] prevVector;
         while (changing) {
-            Double[][] prevVector = vector;
+            prevVector = vector;
             vector = matrixMultiply(transposedMatrix, vector);
             changing = false;
             for (int i = 0; i < vector.length; i++)
                 if (vector[i][0] > (prevVector[i][0] + 0.0001)
                         || vector[i][0] < (prevVector[i][0] - 0.0001)) {
                     changing = true;
-                    break;
+                    i = vector.length; // Break out of loop
                 }
         }
         return vector;
     }
-
 }
