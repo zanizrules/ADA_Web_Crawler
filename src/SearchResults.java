@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * The SearchResults class stores the search results needing to be shown in the applications GUI and a
+ * SearchResultListModel used for displaying the results.
+ */
 class SearchResults extends LinkedList<Page> {
     private SearchResultListModel listModel;
     private LinkedList<Page> searchResults;
@@ -26,21 +30,25 @@ class SearchResults extends LinkedList<Page> {
         return searchResults.size();
     }
 
-    // This method adds a Page to the searchResults
+
     @Override
-    public boolean add(Page page) {
+    public boolean add(Page page) {  // add a Page to the searchResults.
         // If page is added to search results, then add page to list model.
         return searchResults.add(page) && listModel.addSearchResult(page);
     }
 
     SearchResultListModel getListModel() {
-        if (listModel == null) {
+        if (listModel == null) { // Initialise only if not already initialised.
             listModel = new SearchResultListModel(searchResults);
         }
         return listModel;
     }
 
-    private class SearchResultListModel extends AbstractListModel {
+    /**
+     * The SearchResultListModel inner class is a ListModel which is used to display the search results in a JList in
+     * the applications GUI.
+     */
+    private class SearchResultListModel extends AbstractListModel<Page> {
         private ArrayList<Page> searchResults;
 
         // constructor initialises arrayList and sorts the collection in its natural order (Page Rank)
@@ -48,7 +56,7 @@ class SearchResults extends LinkedList<Page> {
             super();
             searchResults = new ArrayList<>();
             searchResults.addAll(searchData);
-            Collections.sort(searchResults);
+            Collections.sort(searchResults, Page.getComparator());
         }
 
         // gets the element at the specified index
@@ -65,7 +73,7 @@ class SearchResults extends LinkedList<Page> {
 
         // adds a search result to the arrayList and notifies any listeners with fireIntervalAdded
         boolean addSearchResult(Page result) {
-            int index = Collections.binarySearch(searchResults, result);
+            int index = Collections.binarySearch(searchResults, result, Page.getComparator());
             index = (index * -1) - 1;
             searchResults.add(index, result);
             fireIntervalAdded(this, index, index);

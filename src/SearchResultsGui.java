@@ -11,46 +11,53 @@ import java.io.IOException;
 class SearchResultsGui extends JPanel implements ActionListener {
     private final static int PANEL_WIDTH = 600; // Width of panel
     private final static int PANEL_HEIGHT = 600; // Height of panel
-    private static JFrame frame;
+    private static JFrame frame; // Search results frame
     private JMenuItem backBtn;
     private WebCrawlerGui searchMenu; // Reference to main screen
     private SearchResults searchResults; // List of results
 
     SearchResultsGui(WebCrawlerGui menu) {
         super(new BorderLayout());
-        searchMenu = menu;
-        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        searchMenu = menu; // reference back to menu for the back button.
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT)); // set panel size
 
+        // Menu bar which stores a back button
         JMenuBar menuBar = new JMenuBar();
         backBtn = new JMenuItem("<html><font size = \"5\">&#8592;</font> <font size = \"4\"> Go Back</font></html>");
         backBtn.addActionListener(this);
         menuBar.add(backBtn);
 
+        // Get search results.
         try {
             Spider spider = new Spider();
-            spider.searchInternet(searchMenu.getUrlText(),searchMenu.getKeywordText());
+            spider.searchInternet(searchMenu.getUrlText(), searchMenu.getKeywordText());
             searchResults = new SearchResults(spider.orderPagesByRank());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        JList results = new JList<>(searchResults.getListModel());
-        JScrollPane scrollPane = new JScrollPane(results);
-        scrollPane.setPreferredSize(new Dimension(PANEL_WIDTH - 200, PANEL_HEIGHT));
+        JList results = new JList<>(searchResults.getListModel()); // Initialise list for results.
+        JScrollPane scrollPane = new JScrollPane(results); // Make list scrollable
         add(menuBar, BorderLayout.NORTH);
         add(scrollPane);
-        initialiseFrame();
+        initialiseFrame(); // set up frame
     }
 
+    /**
+     * This method sets up the frame by creating it and assigning values and conditions as desired.
+     */
     void initialiseFrame() {
-        if (frame == null) {
+        if (frame == null) { // Only initialise if not already initialised.
             frame = new JFrame("Search Results");
         }
 
+        // Set values.
         frame.setSize(PANEL_WIDTH, PANEL_HEIGHT);
         frame.setFocusable(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
+
+        // Add panel to frame
         frame.getContentPane().add(this);
 
         // gets the dimensions for the screen width and height to calculate the screen center
@@ -62,9 +69,12 @@ class SearchResultsGui extends JPanel implements ActionListener {
         // positions frame in the center of the screen
         frame.setLocation(new Point((screenWidth / 2) - (frame.getWidth() / 2),
                 (screenHeight / 2) - (frame.getHeight() / 2)));
-        frame.setVisible(true);
+        frame.setVisible(true); // Show frame
     }
 
+    /**
+     * Return to the main screen/search screen.
+     */
     private void goBack() {
         frame.setVisible(false);
         searchMenu.makeVisible();
@@ -73,7 +83,7 @@ class SearchResultsGui extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Object source = actionEvent.getSource();
-        if (source.equals(backBtn)) {
+        if (source.equals(backBtn)) { // Back button pressed.
             goBack();
         }
     }

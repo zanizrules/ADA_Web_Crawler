@@ -5,61 +5,47 @@
 class PageRank {
 
     /**
-     * Multiplies Matrix A by Matrix B and returns the result (Matrix C).
+     * Multiplies a given matrix by a vector and returns the resulting vector.
      */
-    private static Double[][] matrixMultiply(Double[][] A, Double[][] B) {
+    private static Double[] multiplySquareMatrixbyVec(Double[][] matrix, Double[] vec) {
+        Double[] result = new Double[vec.length];
+        Double sum;
 
-        int aRows = A.length;
-        int aColumns = A[0].length;
-        int bRows = B.length;
-        int bColumns = B[0].length;
-
-        if (aColumns != bRows) {
-            throw new IllegalArgumentException("A:Rows: " + aColumns + " did not match B:Columns " + bRows + ".");
-        }
-
-        Double[][] C = new Double[aRows][bColumns];
-        for (int i = 0; i < aRows; i++) {
-            for (int j = 0; j < bColumns; j++) {
-                C[i][j] = 0d;
+        for (int i = 0; i < result.length; i++) {
+            sum = 0d;
+            for (int j = 0; j < matrix.length; j++) {
+                sum += (matrix[i][j] * vec[j]);
             }
+            result[i] = sum;
         }
-
-        for (int i = 0; i < aRows; i++) { // aRow
-            for (int j = 0; j < bColumns; j++) { // bColumn
-                for (int k = 0; k < aColumns; k++) { // aColumn
-                    C[i][j] += A[i][k] * B[k][j];
-                }
-            }
-        }
-        return C;
+        return result;
     }
 
     /**
-     * Calculates the PageRank Matrix for a given graph aM.
+     * Calculates the PageRank Matrix for a given graph aM, and dampening factor c.
      */
-    private static Double[][] pageRankMatrix(Double[][] aM, double df) {
-        int size = aM.length, outgoing;
+    private static Double[][] pageRankMatrix(Double[][] aM, double c) {
+        int size = aM.length, outDegree;
         for (int i = 0; i < size; i++) {
-            outgoing = 0;
+            outDegree = 0;
             for (int j = 0; j < size; j++) {
-                if (aM[i][j] == 1) {
-                    outgoing++;
+                if (aM[i][j] != 0) {
+                    outDegree++;
                 }
             }
             for (int k = 0; k < size; k++) {
-                if (outgoing == 0) {
-                    aM[i][k] = (double) 1 / size;
+                if (outDegree == 0) {
+                    aM[i][k] = 1d / size;
                 } else {
                     if (aM[i][k] == 1) {
-                        aM[i][k] = ((1 - (df)) / size) + (df / outgoing);
+                        aM[i][k] = ((1 - c) / size) + (c / outDegree);
                     } else {
-                        aM[i][k] = (1 - (df)) / size;
+                        aM[i][k] = (1 - c) / size;
                     }
                 }
             }
         }
-        return aM;
+        return transpose(aM);
     }
 
     /**
@@ -77,29 +63,93 @@ class PageRank {
     }
 
     /**
-     * Simulate the stochastic process by iteratively multiplying the stochastic matrix to the current vector.
-     * Returns an array of vectors value corresponding to each page.
+     * Calculate page rank by using power iteration.
+     * Returns a vector containing the page rank values corresponding to each page.
      */
-    static Double[][] pageRank(Double[][] aM, double df) {
-        Double[][] pageRankMatrix = pageRankMatrix(aM, df);
-        Double[][] transposedMatrix = transpose(pageRankMatrix);
-        Double[][] vector = new Double[pageRankMatrix.length][1];
+    static Double[] pageRank(Double[][] aM, double df) {
+        Double[][] pageRankMatrix = pageRankMatrix(aM, df); // Calculate PageRankMatrix
+        Double[] vector = new Double[pageRankMatrix.length]; // Initialise vector
         for (int i = 0; i < vector.length; i++) {
-            vector[i][0] = (double) 1 / pageRankMatrix.length;
+            vector[i] = 1d / pageRankMatrix.length;
         }
         boolean changing = true;
-        Double[][] prevVector;
+        Double changeFactor = 0.0001; // Factor used in power iteration.
+        Double[] prevVector;
         while (changing) {
             prevVector = vector;
-            vector = matrixMultiply(transposedMatrix, vector);
+            vector = multiplySquareMatrixbyVec(pageRankMatrix, vector); // Iteratively multiply.
             changing = false;
             for (int i = 0; i < vector.length; i++)
-                if (vector[i][0] > (prevVector[i][0] + 0.0001)
-                        || vector[i][0] < (prevVector[i][0] - 0.0001)) {
-                    changing = true;
-                    i = vector.length; // Break out of loop
-                }
+               if(Math.abs(vector[i] - prevVector[i]) > changeFactor) { // Check if the page ranks are still changing.
+                   changing = true;
+                   i = vector.length; // Break out of loop
+               }
         }
         return vector;
+    }
+
+
+    // test stuff -> Delete before submission
+
+    private static void printVector(Double[] vector) {
+        for (Double aVector : vector) {
+            System.out.println(aVector);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Page Rank Centrality on graph from lecture: ");
+
+        Double[][] graph = new Double[4][4];
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph[0].length; j++) {
+                graph[i][j] = 0d;
+            }
+        }
+        graph[0][1] = 1d;
+        graph[1][2] = 1d;
+        graph[1][3] = 1d;
+        graph[2][3] = 1d;
+        graph[3][0] = 1d;
+
+        Double[] centrality = pageRank(graph, 0.15);
+        printVector(centrality);
+
+        // Lab Q3
+        System.out.println("\nPage Rank Centrality on graph from lab: ");
+
+        Double[][] graph2 = new Double[5][5];
+        for (int i = 0; i < graph2.length; i++) {
+            for (int j = 0; j < graph2[0].length; j++) {
+                graph2[i][j] = 0d;
+            }
+        }
+        graph2[0][1] = 1d;
+        graph2[2][0] = 1d;
+        graph2[2][1] = 1d;
+        graph2[2][3] = 1d;
+        graph2[2][4] = 1d;
+        graph2[3][2] = 1d;
+        graph2[3][4] = 1d;
+        graph2[4][3] = 1d;
+
+        centrality = pageRank(graph2, 0.15);
+        printVector(centrality);
+
+        // Lab 08 Q3
+        System.out.println("\nPage Rank Centrality on graph from lab 8: ");
+
+        Double[][] graph3 = new Double[3][3];
+        for (int i = 0; i < graph3.length; i++) {
+            for (int j = 0; j < graph3[0].length; j++) {
+                graph3[i][j] = 0d;
+            }
+        }
+        graph3[0][1] = 1d;
+        graph3[1][0] = 1d;
+        graph3[2][0] = 1d;
+
+        centrality = pageRank(graph3, 0.15);
+        printVector(centrality);
     }
 }

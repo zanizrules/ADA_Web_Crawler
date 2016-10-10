@@ -179,13 +179,13 @@ class Spider {
      */
     Queue<Page> orderPagesByRank() {
         // Create a Page rank Matrix for this graph
-        Double[][] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(), 0.15);
+        Double[] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(), 0.15);
         List<Page> list = webGraph.getOrderedList(); // get OrderList from graph so page rank can be stored accordingly
         // Create a priority queue based on list size, get comparator from Page class for ordering
         PriorityQueue<Page> orderedQueue = new PriorityQueue<>(list.size(), Page.getComparator());
         int counter = 0; // Records position(vertex) in the pageRank matrix
         for (Page page : list) {
-            page.setPageRank(pageRank[counter][0]); // Stores page rank value to the page.
+            page.setPageRank(pageRank[counter]); // Stores page rank value to the page.
             orderedQueue.add(page); // add page to the Priority queue in decreasing order
             counter++;
         }

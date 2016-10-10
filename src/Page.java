@@ -7,7 +7,7 @@ import java.util.Comparator;
  * Search level relates to where it was found when web crawler was performed.
  * Page implements Comparable to compare Page Rank value.
  */
-class Page implements Comparable<Page> {
+class Page {
     private URL url; // Stores page's URL
     private Double pageRank; // Store page rank values
     private int searchLevel; // Store which level page was found
@@ -49,14 +49,8 @@ class Page implements Comparable<Page> {
         return null;
     }
 
-    @Override
-    public int compareTo(Page o) {
-        return pageRank.compareTo(o.getPageRank());
-    }
-
     /**
      * Creates and return a comparator for Page class ordering.
-     *
      * @return Comparator<Page>
      */
     static Comparator<Page> getComparator() {

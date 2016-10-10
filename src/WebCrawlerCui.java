@@ -41,10 +41,10 @@ public class WebCrawlerCui {
 //        boolean incorrectForm = true;
 //        String inputUrl = "";
 //        String Keyword = "";
-//        System.out.println("Search Engine. Please asnwer the Followings:");
+//        System.out.println("Search Engine. Please answer the Followings:");
 //        while (incorrectForm) {
 //
-//            System.out.print("1.Please inform a seed URL where the seach will statr from?\n>");
+//            System.out.print("1.Please inform a seed URL where the search will start from?\n>");
 //            inputUrl = scan.nextLine();
 //            try {
 //                URL url = new URL(inputUrl);
@@ -58,7 +58,7 @@ public class WebCrawlerCui {
 //                System.out.println("Please enter a valid URL. Example: http://aut.ac.nz");
 //            }
 //        }
-//        System.out.print("2.What are we seaching?(String or single word)\n>");
+//        System.out.print("2.What are we searching?(String or single word)\n>");
 //        Keyword = scan.nextLine();
 //        System.out.println("Please wait while search is performed");
 //        spider.searchInternet(inputUrl,Keyword);
