@@ -16,10 +16,20 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
     private final static int PANEL_WIDTH = 450; // size of panel
     private final static int PANEL_HEIGHT = 450;
     private final static Random rand = new Random();
+    private final static String title = "Vini & Shane Web Crawler";
+    private static String oldKeyword, oldUrl; // Store previously entered search terms for comparison
+
+    private boolean isSameKeyword() {
+        return getKeywordText().equals(oldKeyword);
+    }
+
+    private boolean isSameUrl() {
+        return getUrlText().equals(oldUrl);
+    }
 
     private static JFrame frame; // Main screen frame
     // Labels
-    private static final JLabel titleLabel = new JLabel("Vini & Shane Web Crawler"),
+    private static final JLabel titleLabel = new JLabel(title),
             inputUrlLabel = new JLabel("Please enter a URL below:"),
             inputKeywordLabel = new JLabel("Please enter a search term below:");
     // Text Areas
@@ -79,11 +89,11 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
         // Set up buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 170));
-        buttonPanel.add(randomInputButton);
         buttonPanel.add(inputUrlLabel);
         buttonPanel.add(urlText);
         buttonPanel.add(inputKeywordLabel);
         buttonPanel.add(keywordText);
+        buttonPanel.add(randomInputButton);
         buttonPanel.add(searchButton);
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -134,27 +144,29 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
                     // Tell user they have not given a search term
                     JOptionPane.showMessageDialog(this, "Please enter a Search Term", "Error Occurred", JOptionPane.WARNING_MESSAGE);
                 } else { // Search term and url provided
-                    // Show wait message
-                    JOptionPane.showMessageDialog(this, "Please wait while your search is processed", "Searching...", JOptionPane.INFORMATION_MESSAGE);
 
-                    if (searchResultsScreen == null) { // initialise search screen
+                    titleLabel.setText("Searching ...");
+                    update(titleLabel.getGraphics());
+                    titleLabel.setText(title);
+
+                    if (searchResultsScreen == null || !isSameKeyword() || !isSameUrl()) { // initialise search screen
                         searchResultsScreen = new SearchResultsGui(this);
                     }
                     searchResultsScreen.initialiseFrame(); // initialise then show search screen frame
                     frame.setVisible(false);
+                    oldUrl = getUrlText(); // Store search terms for later comparison.
+                    oldKeyword = getKeywordText();
                 }
             }
         } else if (source.equals(randomInputButton)) { // Set url and keyword to one of three test cases
             int i = rand.nextInt(100);
+            urlText.setText("http://aut.ac.nz");
             if (i < 33) {
-                urlText.setText("http://aut.ac.nz");
                 keywordText.setText("Students");
             } else if (i < 66) {
-                urlText.setText("https://www.facebook.com/");
-                keywordText.setText("Like");
+                keywordText.setText("Research");
             } else {
-                urlText.setText("http://stackoverflow.com/");
-                keywordText.setText("Java");
+                keywordText.setText("Teach");
             }
         }
     }

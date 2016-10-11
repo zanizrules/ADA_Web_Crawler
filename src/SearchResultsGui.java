@@ -11,7 +11,7 @@ import java.io.IOException;
 class SearchResultsGui extends JPanel implements ActionListener {
     private final static int PANEL_WIDTH = 600; // Width of panel
     private final static int PANEL_HEIGHT = 600; // Height of panel
-    private static JFrame frame; // Search results frame
+    private JFrame frame; // Search results frame
     private JMenuItem backBtn;
     private WebCrawlerGui searchMenu; // Reference to main screen
     private SearchResults searchResults; // List of results
