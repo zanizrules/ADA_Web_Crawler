@@ -16,7 +16,6 @@ import org.jsoup.select.Elements;
  */
 public class SpiderLeg {
     private final static int timeoutLimit = 5000;
-
     private final static String connection = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 
@@ -115,7 +114,6 @@ public class SpiderLeg {
         List<Element> Images = getImages(url);
 
         printClass("Printing info from: " + url);
-        System.out.println();
         printClass("Meta data: ");
         printList(meta);
         System.out.println();

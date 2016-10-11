@@ -32,17 +32,6 @@ class Spider {
     void searchInternet(Collection<String> list, String KeyWord) throws IOException {
         for (String str : list) {
             URL seedURL = new URL(str);
-
-//            Thread thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        webCrawler(seedURL, KeyWord); // calls method BFS using seed URL.
-//                    } catch (IOException e) {
-//                        System.err.println("IOException when creating Thread for link: "+seedURL.toString());
-//                    }
-//                }
-//            });
             webCrawler(seedURL, KeyWord); // calls method BFS using seed URL.
         }
     }
@@ -70,35 +59,35 @@ class Spider {
         Page firstPage = new Page(startUrl, numSearchLevel); // first vertex stored as Page object
         // create list to hold vertices as they are encountered
         List<URL> visitedLinks = new LinkedList<>();
-        visitedLinks.add(firstPage.getUrl());// handle the starting vertex
+        visitedLinks.add(firstPage.getUrl()); // handle the starting vertex
         //create queue to keep track of vertices not yet fully processed
         LinkedList<Page> processingQueue = new LinkedList<>();
-        processingQueue.addLast(firstPage);// handle the starting vertex
+        processingQueue.addLast(firstPage); // handle the starting vertex
 
         webGraph.addVertex(firstPage); // add first vertex to the graph
         URL currentLink = firstPage.getUrl(); // variable stores the current link for reference in case exception is throw
 
-        // repeatedly find adjacent vertices and visit them. Stops when reachs MAX_LEVEL_SEARCH.
+        // repeatedly find adjacent vertices and visit them. Stops when MAX_LEVEL_SEARCH is reached.
         while (!processingQueue.isEmpty() && (numSearchLevel <= MAX_LEVEL_SEARCH)) {
-            Page frontLink = processingQueue.poll();//remove front element
+            Page frontLink = processingQueue.poll(); // remove front element
 
             try {
-                //get all hyperlinks that frontLink contains
+                // get all hyperlinks that frontLink contains
                 List<URL> hyperlinks = SpiderLeg.getHyperlink(frontLink.getUrl().toString());
                 Iterator<URL> iterator = hyperlinks.iterator(); // gets iterator
                 int numOfPages = 0; //reset number of max allow pages per level
                 while (iterator.hasNext() && numOfPages < MAX_PAGE_PER_SEARCH) {
                     URL nextLink = iterator.next(); // gets first element
-                    currentLink = nextLink;//set current link in case of exception is thrown
-                    //check if link has been visited. if not set as visited
+                    currentLink = nextLink; // set current link in case exception is thrown
+                    // check if link has been visited. if not, then set as visited.
                     if (!visitedLinks.contains(nextLink)) {
-                        visitedLinks.add(nextLink);//addd to visited
-                        //search keyword has been found
+                        visitedLinks.add(nextLink);// add to visited
+                        // search keyword has been found
                         if (findKeyWord(nextLink, KeyWord)) {
-                            Page child = new Page(nextLink, numSearchLevel + 1); //creates Page object for new link
-                            processingQueue.addLast(child); //add new page to the queue to be processed
-                            webGraph.addVertex(child); //add new Page as a vertex
-                            webGraph.addEdge(frontLink, child); //set edge, frontLink to new Page
+                            Page child = new Page(nextLink, numSearchLevel + 1); // creates Page object for new link
+                            processingQueue.addLast(child); // add new page to the queue to be processed
+                            webGraph.addVertex(child); // add new Page as a vertex
+                            webGraph.addEdge(frontLink, child); // set edge, frontLink to new Page
                         }
                     } else {
                         // If link has been visit try to find it in the graph. Note: only vertex which has the
@@ -118,7 +107,7 @@ class Spider {
             } catch (IOException e) {
                 System.err.println("At webCrawler caught I/O Exception in " + currentLink);
             }
-            numSearchLevel++;//increase level of search
+            numSearchLevel++; // increase level of search
         }
         // Save list to a file
         printToFile(webGraph.getOrderedList(), "unOrderedListOfLinks");
@@ -222,9 +211,9 @@ class Spider {
     String printFromOrderedList() {
         Queue<Page> pages = this.orderPagesByRank();
         String str = "";
-
+        Page page;
         while (!pages.isEmpty()) {
-            Page page = pages.poll();
+            page = pages.poll();
             str += page.getUrl() + "\nPageRank value: " + page.getPageRank() + "\n";
         }
         return str;
