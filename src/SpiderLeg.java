@@ -9,6 +9,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The SpiderLeg class is responsible for getting information from a HTML file using a given URL.
  * Such information includes Meta data, Title, Description, KeyWords, Hyperlinks, and ImageLinks.
  * Printing methods are used for testing purposes only.

@@ -1,4 +1,7 @@
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The PageRank Class is responsible for calculating the Page Rank value for a web-page.
  * The class has functionality to multiply matrices, transpose matrices and calculate centrality values.
  */

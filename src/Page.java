@@ -3,6 +3,9 @@ import java.net.URL;
 import java.util.Comparator;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The Page Class stores the URL, page rank value, and search level of a web-page.
  * Search level relates to where it was found when web crawler was performed.
  * Page implements Comparable to compare Page Rank value.

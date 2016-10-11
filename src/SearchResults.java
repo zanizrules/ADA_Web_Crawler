@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.util.*;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The SearchResults class stores the search results needing to be shown in the applications GUI and a
  * SearchResultListModel used for displaying the results.
  */

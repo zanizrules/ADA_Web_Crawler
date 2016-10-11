@@ -5,7 +5,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 /**
- * Created by Shane Birdsall on 7/10/2016.
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * GUI Class created for displaying the search results for a given seed url and keyword.
  */
 class SearchResultsGui extends JPanel implements ActionListener {

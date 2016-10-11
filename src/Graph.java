@@ -1,6 +1,9 @@
 import java.util.*;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The Graph Class is used to store vertices and edges, in other words it stores web-pages and their links to other
  * web-pages. A map is used to represent an adjacency list where the key is vertex type E and its value is a list of
  * vertices to which the key is linked to. An ArrayList is used to maintain an ordered list sequentially as vertices

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * GUI Class created for Web Crawler. This class is the main screen of the application and allows the user to input
  * a seed URL, and a keyword and then search for a list of relating web pages.
  */

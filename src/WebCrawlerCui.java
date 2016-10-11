@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * WebCrawlerCui implements a main class for the Cui version of the WebCrawler.
  * This class has been hard coded to facilitate testing. The current set up will search a keyWord from different seeds.
  * Searching from different seeds are not available in the Gui version.

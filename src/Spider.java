@@ -10,6 +10,9 @@ import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
+ * Vini :
+ * Shane Birdsall : 14870204
+ *
  * The Spider Class stores a graph of pages which will be populated when a search is performed.
  * Spider is responsible for exploring the internet from different seeds or a specific seed. A key word must be
  * provided such that it will narrow down the number of links by matching the keyword on each pages' meta data.
