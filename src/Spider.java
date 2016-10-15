@@ -150,14 +150,30 @@ class Spider {
     }
 
     /**
-     * Class will print a list of Page URLs to a file
+     * printToFile methods will print a list of Page URLs to a file.
      */
-    private void printToFile(Collection<Page> list, String filename) {
+    private void printToFile(PriorityQueue<Page> pages, String filename) {
         PrintWriter outputStream = null;
         try {
             outputStream = new PrintWriter(new FileOutputStream(filename + ".txt"));
-            for (Page page : list) {
-                outputStream.println(page.getUrl().toString());
+            Queue<Page> copyOfPages = new PriorityQueue<>(pages);
+            while (!copyOfPages.isEmpty()) {
+                outputStream.println(copyOfPages.poll().getUrl().toString());
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("printToFile method failed. Unable to create File");
+        }
+        if (outputStream != null) {
+            outputStream.close();
+        }
+    }
+
+    private void printToFile(List<Page> pages, String filename) {
+        PrintWriter outputStream = null;
+        try {
+            outputStream = new PrintWriter(new FileOutputStream(filename + ".txt"));
+            for (Page p : pages) {
+                outputStream.println(p.getUrl().toString());
             }
         } catch (FileNotFoundException e) {
             System.out.println("printToFile method failed. Unable to create File");
@@ -214,7 +230,7 @@ class Spider {
      * Not used for the GUI, only used for CUI
      */
     String printFromOrderedList() {
-        Queue<Page> pages = this.orderPagesByRank();
+        Queue<Page> pages = orderPagesByRank();
         String str = "";
         Page page;
         while (!pages.isEmpty()) {
