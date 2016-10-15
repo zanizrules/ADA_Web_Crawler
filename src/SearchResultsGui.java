@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Vini :
@@ -16,7 +17,7 @@ class SearchResultsGui extends JPanel implements ActionListener {
     private JFrame frame; // Search results frame
     private JMenuItem backBtn;
     private WebCrawlerGui searchMenu; // Reference to main screen
-    private SearchResults searchResults; // List of results
+    private Queue<Page> searchResults; // List of results
 
     SearchResultsGui(WebCrawlerGui menu) {
         super(new BorderLayout());
@@ -33,12 +34,17 @@ class SearchResultsGui extends JPanel implements ActionListener {
         try {
             Spider spider = new Spider();
             spider.searchInternet(searchMenu.getUrlText(), searchMenu.getKeywordText());
-            searchResults = new SearchResults(spider.orderPagesByRank());
+            searchResults = spider.orderPagesByRank();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        JList results = new JList<>(searchResults.getListModel()); // Initialise list for results.
+        // Create List Model for displaying the results in a Jlist
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for(Page p : searchResults) {
+            model.addElement(p.toString()); // Add results to model
+        }
+        JList<String> results = new JList<>(model); // Initialise JList using the model which contains the results.
         JScrollPane scrollPane = new JScrollPane(results); // Make list scrollable
         add(menuBar, BorderLayout.NORTH);
         add(scrollPane);
@@ -86,7 +92,7 @@ class SearchResultsGui extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object source = actionEvent.getSource();
         if (source.equals(backBtn)) { // Back button pressed.
-            goBack();
+            goBack(); // Return to previous screen.
         }
     }
 }
