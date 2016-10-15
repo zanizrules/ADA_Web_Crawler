@@ -6,7 +6,6 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 /**
@@ -19,7 +18,6 @@ import org.jsoup.select.Elements;
  * There is a main method in this class which tests all methods, it was created to satisfy Q1.
  */
 public class SpiderLeg {
-    private final static int timeoutLimit = 5000;
     private final static String connection = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 
@@ -72,7 +70,8 @@ public class SpiderLeg {
      * HTML file for the given URL.
      */
     static ArrayList<URL> getHyperlink(String url) throws IOException {
-        Document doc = Jsoup.connect(url).userAgent(connection).timeout(timeoutLimit).get();
+        // Time out of 5000 due to hyperlinks being essential to the web crawler algorithm
+        Document doc = Jsoup.connect(url).userAgent(connection).timeout(5000).get();
         Elements links = doc.select("a[href]"); // a with href
         ArrayList<URL> absoluteLinks = new ArrayList<>();
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -26,7 +27,8 @@ class Spider {
     private static final int MAX_PAGE_PER_SEARCH = 100; // Limits the number of pages per level
 
     Spider() {
-        webGraph = new Graph<>(); // DTS
+        // Graph data structure (DTS) used to represent the connections between each of the visited web pages.
+        webGraph = new Graph<>();
     }
 
     /**
@@ -61,7 +63,7 @@ class Spider {
 
         Page firstPage = new Page(startUrl, numSearchLevel); // first vertex stored as Page object
         // create list to hold vertices as they are encountered
-        List<URL> visitedLinks = new LinkedList<>();
+        Set<URL> visitedLinks = new LinkedHashSet<>();
         visitedLinks.add(firstPage.getUrl()); // handle the starting vertex
         //create queue to keep track of vertices not yet fully processed
         LinkedList<Page> processingQueue = new LinkedList<>();
@@ -113,7 +115,7 @@ class Spider {
             numSearchLevel++; // increase level of search
         }
         // Save list to a file
-        printToFile(webGraph.getOrderedList(), "unOrderedListOfLinks");
+        printToFile(webGraph.getVertexList(), "unOrderedListOfLinks");
     }
 
     /**
@@ -171,8 +173,8 @@ class Spider {
      */
     Queue<Page> orderPagesByRank() {
         // Create a Page rank Matrix for this graph
-        Double[] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(), 0.15);
-        List<Page> list = webGraph.getOrderedList(); // get OrderList from graph so page rank can be stored accordingly
+        Double[] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(), 0.15); // c = 0.15
+        List<Page> list = webGraph.getVertexList(); // get OrderList from graph so page rank can be stored accordingly
         // Create a priority queue based on list size, get comparator from Page class for ordering
         PriorityQueue<Page> orderedQueue = new PriorityQueue<>(list.size(), Page.getComparator());
         int counter = 0; // Records position(vertex) in the pageRank matrix
@@ -195,7 +197,7 @@ class Spider {
         if (webGraph.getSize() <= 1) {
             return "The keyword provided was not found in the seed Webpage!";
         } else {
-            List<Page> list = webGraph.getOrderedList();
+            List<Page> list = webGraph.getVertexList();
             for (Page key : list) {
                 str += "Vertex found at level " + key.getSearchLevel() + ": " + key.getUrl() + "\n";
                 List<Page> listEdge = webGraph.getEdge(key);

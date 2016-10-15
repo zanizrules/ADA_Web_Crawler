@@ -38,8 +38,8 @@ class Page {
     }
 
     /**
-        toString method which returns a representation of a web-page to be shown in the GUI.
-        String is edited with html to get a visually appealing output.
+     * toString method which returns a representation of a web-page to be shown in the GUI.
+     * String is edited with html to get a visually appealing output.
      */
     public String toString() {
         try {
@@ -54,6 +54,7 @@ class Page {
 
     /**
      * Creates and return a comparator for Page class ordering.
+     *
      * @return Comparator<Page>
      */
     static Comparator<Page> getComparator() {

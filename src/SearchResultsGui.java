@@ -36,12 +36,12 @@ class SearchResultsGui extends JPanel implements ActionListener {
             spider.searchInternet(searchMenu.getUrlText(), searchMenu.getKeywordText());
             searchResults = spider.orderPagesByRank();
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Invalid URL entered", "Error Occurred", JOptionPane.WARNING_MESSAGE);
         }
 
         // Create List Model for displaying the results in a Jlist
         DefaultListModel<String> model = new DefaultListModel<>();
-        for(Page p : searchResults) {
+        for (Page p : searchResults) {
             model.addElement(p.toString()); // Add results to model
         }
         JList<String> results = new JList<>(model); // Initialise JList using the model which contains the results.

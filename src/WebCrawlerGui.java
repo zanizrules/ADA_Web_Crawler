@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 /**
@@ -152,13 +154,18 @@ public class WebCrawlerGui extends JPanel implements ActionListener {
                     update(titleLabel.getGraphics());
                     titleLabel.setText(title);
 
-                    if (searchResultsScreen == null || !isSameKeyword() || !isSameUrl()) { // initialise search screen
-                        searchResultsScreen = new SearchResultsGui(this);
+                    try {
+                        new URL(getUrlText());
+                        if (searchResultsScreen == null || !isSameKeyword() || !isSameUrl()) { // initialise search screen
+                            searchResultsScreen = new SearchResultsGui(this);
+                        }
+                        searchResultsScreen.initialiseFrame(); // initialise then show search screen frame
+                        frame.setVisible(false);
+                        oldUrl = getUrlText(); // Store search terms for later comparison.
+                        oldKeyword = getKeywordText();
+                    } catch (MalformedURLException e) {
+                        JOptionPane.showMessageDialog(this, "Invalid URL entered", "Error Occurred", JOptionPane.WARNING_MESSAGE);
                     }
-                    searchResultsScreen.initialiseFrame(); // initialise then show search screen frame
-                    frame.setVisible(false);
-                    oldUrl = getUrlText(); // Store search terms for later comparison.
-                    oldKeyword = getKeywordText();
                 }
             }
         } else if (source.equals(randomInputButton)) { // Set url and keyword to one of three test cases

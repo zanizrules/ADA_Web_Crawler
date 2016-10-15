@@ -1,5 +1,10 @@
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * Vinicius Ferreira : 14868388
@@ -11,17 +16,17 @@ import java.util.ArrayList;
  * Menu for user input has been commented out due to Gui implementation providing better UI.
  */
 public class WebCrawlerCui {
+    private static Spider spider = new Spider();
 
-    public static void main(String[] args) {
-        Spider spider = new Spider();
-
+    // Hard coded test which can be used to save time
+    private void testData() {
         // Set the Web pages here
         String aut = "http://aut.ac.nz";
         String jSoup = "https://jsoup.org";
         String stackoverflow = "http://stackoverflow.com/";
         String fB = "https://www.facebook.com/";
 
-        //Please set the keyword here
+        //Set the keyword here
         String KeyWord = "Java";
 
         // Creates a list of seed Links
@@ -40,35 +45,67 @@ public class WebCrawlerCui {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-//        Menu created for user input, but commented out due to GUI implementation
-//        Scanner scan = new Scanner(System.in);
-//        boolean incorrectForm = true;
-//        String inputUrl = "";
-//        String Keyword = "";
-//        System.out.println("Search Engine. Please answer the Followings:");
-//        while (incorrectForm) {
-//
-//            System.out.print("1.Please inform a seed URL where the search will start from?\n>");
-//            inputUrl = scan.nextLine();
-//            try {
-//                URL url = new URL(inputUrl);
-//                URLConnection conn = url.openConnection();
-//                conn.connect();
-//                incorrectForm = false;
-//            } catch (MalformedURLException e) {
-//                System.out.println("Please enter a valid URL. Example:");
-//                System.out.println("http://aut.ac.nz , https://jsoup.org , http://stackoverflow.com/");
-//            } catch (IOException e) {
-//                System.out.println("Please enter a valid URL. Example: http://aut.ac.nz");
-//            }
-//        }
-//        System.out.print("2.What are we searching?(String or single word)\n>");
-//        Keyword = scan.nextLine();
-//        System.out.println("Please wait while search is performed");
-//        spider.searchInternet(inputUrl,Keyword);
-//        spider.printFromAdjList();
-//        System.out.println("Printing Webpages based on its page rank value");
-//        System.out.println(spider.printFromOrderedList());
+    public static void main(String[] args) {
+
+        // Menu created for user input
+        Scanner scan = new Scanner(System.in);
+        boolean incorrectForm = true, incorrectNum = true;
+        String inputUrl = "", Keyword;
+        ArrayList<String> seeds = new ArrayList<>();
+        System.out.println("Search Engine. Please answer the Following:");
+
+        int amountOfUrl = 0;
+        while (incorrectNum) {
+            System.out.print("Select the amount of seed URL's you wish to use: (1-10)\n>");
+            try {
+                amountOfUrl = scan.nextInt();
+                if (amountOfUrl < 0 || amountOfUrl > 10) {
+                    throw new InputMismatchException();
+                } else {
+                    incorrectNum = false;
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Please enter a number between 1 and 10");
+            } finally {
+                scan.nextLine();
+            }
+        }
+
+        System.out.println("1.Please provide " + amountOfUrl + " seed URL's where the search will start from");
+
+        for (int i = 0; i < amountOfUrl; i++) {
+            while (incorrectForm) {
+                System.out.print(">");
+                inputUrl = scan.nextLine();
+                try {
+                    URL url = new URL(inputUrl);
+                    URLConnection conn = url.openConnection();
+                    conn.connect();
+                    incorrectForm = false;
+                } catch (MalformedURLException | IllegalArgumentException e) {
+                    System.out.println("Please enter a valid URL. Example:");
+                    System.out.println("http://aut.ac.nz , https://jsoup.org , http://stackoverflow.com/");
+                } catch (IOException e) {
+                    System.out.println("Please enter a valid URL. Example: http://aut.ac.nz");
+                }
+            }
+            incorrectForm = true;
+            seeds.add(inputUrl);
+            System.out.println();
+        }
+        System.out.print("2.What are you searching for? (Keyword: String or single word)\n>");
+        Keyword = scan.nextLine();
+        System.out.println("Please wait while search is performed " +
+                "(This may take some time, and timeout exceptions may be thrown)");
+        try {
+            spider.searchInternet(seeds, Keyword);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        spider.printFromAdjList();
+        System.out.println("Printing Web pages based on page rank values:");
+        System.out.println(spider.printFromOrderedList());
     }
 }

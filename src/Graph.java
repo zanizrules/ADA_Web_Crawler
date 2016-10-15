@@ -10,12 +10,12 @@ import java.util.*;
  * are added.
  */
 class Graph<E> {
-    private ArrayList<E> orderedList; // Maintain the vertices order
-    private Map<E, List<E>> adjacency_list; // Store vertices and their edges
+    private ArrayList<E> vertexList; // ordered list of vertices based on the order they were added.
+    private Map<E, List<E>> adjacency_list; // Maps each Vertex set to its adjacency list.
 
     Graph() {
         adjacency_list = new HashMap<>();
-        orderedList = new ArrayList<>();
+        vertexList = new ArrayList<>();
     }
 
     void addVertex(E vertex) {
@@ -23,7 +23,7 @@ class Graph<E> {
             return;
         }
         adjacency_list.put(vertex, new LinkedList<>());
-        orderedList.add(vertex);
+        vertexList.add(vertex);
     }
 
     void addEdge(E startVertex, E endVertex) {
@@ -45,8 +45,8 @@ class Graph<E> {
         return adjacency_list.keySet().iterator();
     }
 
-    List<E> getOrderedList() {
-        return orderedList;
+    List<E> getVertexList() {
+        return vertexList;
     }
 
     /**
@@ -55,7 +55,7 @@ class Graph<E> {
      * A 2D array(matrix representation) is needed for calculating page rank easily in other methods.
      */
     Double[][] createAdjacencyMatrix() {
-        int size = this.orderedList.size();
+        int size = this.vertexList.size();
         Double[][] ajcMatrix = new Double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -64,10 +64,10 @@ class Graph<E> {
         }
         int counter = 0;
 
-        for (E key : orderedList) {
+        for (E key : vertexList) {
             List<E> listEdge = this.getEdge(key);
             for (E element : listEdge) {
-                int i = orderedList.indexOf(element);
+                int i = vertexList.indexOf(element);
                 ajcMatrix[counter][i] = 1.0;
             }
             counter++;
