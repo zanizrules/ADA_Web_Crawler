@@ -3,7 +3,7 @@ import java.net.URL;
 import java.util.Comparator;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * The Page Class stores the URL, page rank value, and search level of a web-page.

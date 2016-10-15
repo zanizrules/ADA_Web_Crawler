@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * GUI Class created for displaying the search results for a given seed url and keyword.

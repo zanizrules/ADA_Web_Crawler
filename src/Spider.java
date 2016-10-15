@@ -10,7 +10,7 @@ import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * The Spider Class stores a graph of pages which will be populated when a search is performed.

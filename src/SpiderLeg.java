@@ -6,10 +6,11 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * The SpiderLeg class is responsible for getting information from a HTML file using a given URL.
@@ -93,7 +94,7 @@ public class SpiderLeg {
     }
 
     // Print a list
-    private static void printList(List list) {
+    private static void printList(List<Element> list) {
         list.forEach(System.out::println);
     }
 
@@ -134,7 +135,7 @@ public class SpiderLeg {
         System.out.println();
 
         printClass("Hyperlinks");
-        printList(Hyperlinks);
+        Hyperlinks.forEach(System.out::println);
         System.out.println();
 
         printClass("Images links: ");

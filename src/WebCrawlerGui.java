@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * GUI Class created for Web Crawler. This class is the main screen of the application and allows the user to input

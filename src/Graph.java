@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * The Graph Class is used to store vertices and edges, in other words it stores web-pages and their links to other

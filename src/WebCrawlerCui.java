@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * WebCrawlerCui implements a main class for the Cui version of the WebCrawler.

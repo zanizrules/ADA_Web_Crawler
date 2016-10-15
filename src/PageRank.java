@@ -1,5 +1,5 @@
 /**
- * Vini :
+ * Vinicius Ferreira : 14868388
  * Shane Birdsall : 14870204
  *
  * The PageRank Class is responsible for calculating the Page Rank value for a web-page.
