@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.*;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -187,7 +186,7 @@ class Spider {
      * Create a adjacency Matrix from the graph. Calculates the Page rank of each page.
      * Set the PageRank for the correct page. Sort Pages by page rank by adding into a PriorityQueue.
      */
-    Queue<Page> orderPagesByRank() {
+    PriorityQueue<Page> orderPagesByRank() {
         // Create a Page rank Matrix for this graph
         Double[] pageRank = PageRank.pageRank(webGraph.createAdjacencyMatrix(), 0.15); // c = 0.15
         List<Page> list = webGraph.getVertexList(); // get OrderList from graph so page rank can be stored accordingly

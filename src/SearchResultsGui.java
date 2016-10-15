@@ -17,7 +17,7 @@ class SearchResultsGui extends JPanel implements ActionListener {
     private JFrame frame; // Search results frame
     private JMenuItem backBtn;
     private WebCrawlerGui searchMenu; // Reference to main screen
-    private Queue<Page> searchResults; // List of results
+    private PriorityQueue<Page> searchResults; // List of results
 
     SearchResultsGui(WebCrawlerGui menu) {
         super(new BorderLayout());
@@ -41,8 +41,8 @@ class SearchResultsGui extends JPanel implements ActionListener {
 
         // Create List Model for displaying the results in a Jlist
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (Page p : searchResults) {
-            model.addElement(p.toString()); // Add results to model
+        while (!searchResults.isEmpty()) {
+            model.addElement(searchResults.poll().toString()); // Add results to model
         }
         JList<String> results = new JList<>(model); // Initialise JList using the model which contains the results.
         JScrollPane scrollPane = new JScrollPane(results); // Make list scrollable
